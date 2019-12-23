@@ -1,0 +1,27 @@
+body {
+    padding: 30px;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    margin-top: 60px;
+}
+
+.download-link {
+    color: #00a1d8;
+    line-height: 1.5em;
+    margin: .5em;
+    font-size: 1em;
+}
+
+.download-link.file:hover {
+    text-shadow: 0 0 1px grey;
+}
+
+.download-link.directory:hover {
+    text-shadow: 0 0 1px grey;
+}
+
+.icon {
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+    vertical-align: middle;
+}

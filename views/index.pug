@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Welcome to Sleaf's file share space!
+  ol
+    each directory in directories
+      li
+        img(class='icon' src='/images/icon-dir.png')
+        a(class='download-link directory' href=directory) #{directory}
+    each file in files
+      li
+        img(class='icon' src='/images/icon-file.png')
+        a(class='download-link file' href=file) #{file}
