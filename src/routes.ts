@@ -1,22 +1,24 @@
 import Express from 'express';
 import { join } from 'path';
-import { createReadStream, readdir, stat, statSync } from 'fs';
+import { createReadStream, readdir, stat } from 'fs';
 import { Response } from 'express-serve-static-core';
-import { filePath, shareDir } from './args';
+import { filePath, shareDir } from './config';
 import { getCommonLogString } from './utils';
 
 const router = Express.Router();
 
-const loadFiles = (res: Response, dirPath: string) => readdir(dirPath, (err, results) => {
+const loadFiles = (res: Response, dirPath: string) => readdir(dirPath, { withFileTypes: true }, (err, results) => {
   if (err) throw err;
   const directories = [];
   const files = [];
-  for (const file of results) {
-    const fileStat = statSync(join(dirPath, file));
-    if (fileStat.isDirectory()) {
-      directories.push(file + '/');
-    } else if (fileStat.isFile()) {
-      files.push(file);
+  for (const fileStat of results) {
+    switch (true) {
+      case fileStat.isDirectory():
+        directories.push(fileStat.name + '/');
+        break;
+      case fileStat.isFile():
+        files.push(fileStat.name);
+        break;
     }
   }
   res.render('index', {

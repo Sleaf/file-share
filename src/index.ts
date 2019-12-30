@@ -4,10 +4,10 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import os from 'os';
-import routes from './routes';
-import { filePath, shareDir, sharePort } from './args';
-import { getCommonLogString } from './utils';
 import chalk from 'chalk';
+import routes from './routes';
+import { exportPort, filePath, publicPath, publicResourceList, shareDir } from './config';
+import { getCommonLogString } from './utils';
 
 const app = Express();
 
@@ -16,7 +16,7 @@ const ips = os.networkInterfaces();
 const avaliableIpv4 = Object.values(ips)
   .map(item => item.filter(item => item.family === 'IPv4' && !item.internal)) // 只输出外网地址
   .reduce((acc, item) => acc.concat(item), []);
-const addressStr = avaliableIpv4.map(({ address }) => `http://${address}:${sharePort}`).join('\n\t\t');
+const addressStr = avaliableIpv4.map(({ address }) => `http://${address}:${exportPort}`).join('\n\t\t');
 console.log('分享地址为：', `\t${addressStr}`);
 console.log('分享目录为：', `\t${filePath}（${shareDir ? '' : '不'}含文件夹）`);
 
@@ -32,16 +32,15 @@ app.use(morgan(
     return `${getCommonLogString(ip)} ${stateStr} ${path} `;
   },
   {
-    skip: (req, res) => /\.(css|png|ico)$/.test(req.url),
+    skip: (req) => publicResourceList.some(item => (req.url === item)),
   },
 ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(Express.static(resolve('./public')));
+app.use(Express.static(publicPath));
 
 // pages
 app.use('/', routes);
 
-app.listen(sharePort);
-module.exports = app;
+app.listen(exportPort);
