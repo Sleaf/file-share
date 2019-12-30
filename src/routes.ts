@@ -1,6 +1,6 @@
 import Express from 'express';
 import { join } from 'path';
-import { createReadStream, readdir, statSync } from 'fs';
+import { createReadStream, readdir, stat, statSync } from 'fs';
 import { Response } from 'express-serve-static-core';
 import { filePath, shareDir } from './args';
 import { getCommonLogString } from './utils';
@@ -30,22 +30,26 @@ router.get('/', (req, res) => loadFiles(res, filePath));
 
 router.get('*', (req, res) => {
   // 实现文件下载
-  const fileParam = decodeURI(req.path);
-  const downloadFile = join(filePath, fileParam);
-  const fileStat = statSync(downloadFile);
-  if (fileStat.isDirectory()) {
-    // 打开目录
-    return loadFiles(res, downloadFile);
-  } else if (fileStat.isFile()) {
-    console.log(getCommonLogString(req.ip), '下载文件:', downloadFile);
-    res.set({
-      'Content-Type': 'application/octet-stream',
-      'Content-Length': fileStat.size,
-    });
-    return createReadStream(downloadFile).pipe(res);
-  } else {
-    return res.end(404);
-  }
+  const downloadFile = join(filePath, decodeURI(req.path));
+  const logPrefix = getCommonLogString(req.ip);
+  stat(downloadFile, (err, fileStat) => {
+    switch (true) {
+      case fileStat?.isDirectory():
+        return loadFiles(res, downloadFile);
+      case fileStat?.isFile():
+        res.set({
+          'Content-Type': 'application/octet-stream',
+          'Content-Length': fileStat.size,
+        });
+        console.log(logPrefix, '下载文件:', downloadFile);
+        return createReadStream(downloadFile).pipe(res);
+      default:
+        res.status(404);
+        return res.render('error', {
+          message: 'File or directory was not found!',
+        });
+    }
+  });
 });
 
 export default router;

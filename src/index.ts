@@ -43,12 +43,5 @@ app.use(Express.static(resolve('./public')));
 // pages
 app.use('/', routes);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(new Error('Not Found'));
-});
-
-app.on('error', (e) => console.error(e));
-
 app.listen(sharePort);
 module.exports = app;
