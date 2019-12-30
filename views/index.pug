@@ -2,6 +2,10 @@ extends layout
 
 block content
   ol
+    if upperDir
+      li
+        img(class='icon' src='/images/icon-return.png')
+        a(class='download-link upper' href=upperDir) ..
     each directory in directories
       li
         img(class='icon' src='/images/icon-dir.png')

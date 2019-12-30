@@ -22,6 +22,7 @@ const loadFiles = (res: Response, dirPath: string) => readdir(dirPath, { withFil
     }
   }
   res.render('index', {
+    upperDir: dirPath === filePath ? null : `${join(dirPath, '..').slice(filePath.length)}/`,
     directories: shareDir ? directories : [],
     files,
   });
