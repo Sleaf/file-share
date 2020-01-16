@@ -10,18 +10,15 @@ export const exportPort = args['p'] || 8080;
 // config
 export const publicPath = resolve('./public');
 const flatDir = (filePath = ''): Array<string> => {
-  const resFileList = [];
+  const resFileList: Array<string> = [];
   const files = readdirSync(join(publicPath, filePath), { withFileTypes: true });
   for (const fileStat of files) {
     const curPath = `${filePath}/${fileStat.name}`;
-    switch (true) {
-      case fileStat.isDirectory():
-        const fileList = flatDir(curPath).map(item => filePath + item);
-        resFileList.push(...fileList);
-        break;
-      case fileStat.isFile():
-        resFileList.push(curPath);
-        break;
+    if (fileStat.isDirectory()) {
+      const fileList = flatDir(curPath).map(item => filePath + item);
+      resFileList.push(...fileList);
+    } else {
+      resFileList.push(curPath);
     }
   }
   return resFileList;

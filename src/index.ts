@@ -7,7 +7,7 @@ import os from 'os';
 import chalk from 'chalk';
 import routes from './routes';
 import { exportPort, filePath, publicPath, publicResourceList, shareDir } from './config';
-import { getCommonLogString } from './utils';
+import { getCommonLogString } from './utils/log';
 
 const app = Express();
 
@@ -32,7 +32,10 @@ app.use(morgan(
     return `${getCommonLogString(ip)} ${stateStr} ${path} `;
   },
   {
-    skip: (req) => publicResourceList.some(item => (req.url === item)),
+    skip: (req) => (
+      publicResourceList.some(item => (req.url === item)) // 静态资源
+      || req.res?.getHeader('Content-Type') === 'application/octet-stream' // 下载的文件
+    ),
   },
 ));
 app.use(bodyParser.json());

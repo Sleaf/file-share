@@ -1,26 +1,17 @@
 import Express from 'express';
 import { join } from 'path';
-import { createReadStream, readdir, stat } from 'fs';
+import { createReadStream, Dirent, readdir, stat } from 'fs';
 import { Response } from 'express-serve-static-core';
 import { filePath, shareDir } from './config';
-import { getCommonLogString } from './utils';
+import { getCommonLogString } from './utils/log';
+import { toAutoUnit } from './utils/number';
 
 const router = Express.Router();
 
 const loadFiles = (res: Response, dirPath: string) => readdir(dirPath, { withFileTypes: true }, (err, results) => {
   if (err) throw err;
-  const directories = [];
-  const files = [];
-  for (const fileStat of results) {
-    switch (true) {
-      case fileStat.isDirectory():
-        directories.push(fileStat.name + '/');
-        break;
-      case fileStat.isFile():
-        files.push(fileStat.name);
-        break;
-    }
-  }
+  const directories: Array<Dirent> = results.filter(fileStat => fileStat.isDirectory());
+  const files: Array<Dirent> = results.filter(fileStat => fileStat.isFile());
   res.render('index', {
     upperDir: dirPath === filePath ? null : `${join(dirPath, '..').slice(filePath.length)}/`,
     directories: shareDir ? directories : [],
@@ -45,7 +36,14 @@ router.get('*', (req, res) => {
           'Content-Length': fileStat.size,
         });
         console.log(logPrefix, '下载文件:', downloadFile);
-        return createReadStream(downloadFile).pipe(res);
+        const startTime = Date.now();
+        const closeHandler = () => {
+          const rate = fileStat.size / ((Date.now() - startTime) / 1000);
+          console.log(logPrefix, '下载完成:', downloadFile, `${toAutoUnit(rate)}/s`);
+        };
+        return createReadStream(downloadFile)
+          .on('close', closeHandler)
+          .pipe(res);
       default:
         res.status(404);
         return res.render('error', {
