@@ -1,0 +1,73 @@
+$sizeWidth = 10em
+
+row-cell-mixin() {
+  .name {
+    flex auto
+  }
+
+  .size, .date {
+    flex none
+    padding 0 .5em
+    width $sizeWidth
+    text-align right
+  }
+}
+
+row-icon-mixin() {
+  position relative
+  content ''
+  height 1em
+  width 1em
+  margin 0 .333em
+  display inline-block
+  background-size cover
+}
+
+.file-table {
+  display flex
+  flex-direction column
+  box-shadow 0 0 1px 3px rgba(169, 169, 169, 0.2)
+
+  .title-row {
+    row-cell-mixin()
+    display flex
+    align-items center
+    height 2em
+    padding-left 1em
+    background-color: alpha($theme-color, 0.3)
+    box-shadow 0 0 1em .5em alpha(white, 0.5) inset
+  }
+
+  a {
+    row-cell-mixin()
+    display flex
+    align-items center
+    height 2em
+    transition background-color 200ms ease-in-out
+    color: black
+
+    &:nth-child(even) {
+      background-color: alpha($theme-color, 0.1)
+    }
+
+    &:hover {
+      background-color: alpha($theme-color, 0.15)
+      font-weight bold
+    }
+
+    &.return:before {
+      row-icon-mixin()
+      background-image url("/images/icon-return.png")
+    }
+
+    &.directory:before {
+      row-icon-mixin()
+      background-image url("/images/icon-dir.png")
+    }
+
+    &.file:before {
+      row-icon-mixin()
+      background-image url("/images/icon-file.png")
+    }
+  }
+}

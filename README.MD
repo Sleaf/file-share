@@ -1,5 +1,5 @@
 # 文件共享服务器
-
+> 暂未支持高并发情况
 ## 快速开始
 ```shell script
 yarn share [path_you_want_to_share] [options] #分享文件（默认为项目目录）

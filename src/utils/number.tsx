@@ -20,27 +20,26 @@ export const toFixed = (number?: Nullable<number>, fractionDigits = 1) => holder
 export const toFixed1 = (number?: Nullable<number>) => toFixed(number, 1);
 export const toFixed2 = (number?: Nullable<number>) => toFixed(number, 2);
 export const formatInt = (number?: Nullable<number>) => toFixed(number, 0);
-export const toBn = (number?: Nullable<number>) => holderFilter(number) || `${toFixed2(number)} bn`;
-export const toKilo = (number?: Nullable<number>, formatter = toRound) => holderFilter(number) || `${formatter(Number(number) / 1_000)} K`;
-export const toMillionn = (number?: Nullable<number>, formatter = toRound) => holderFilter(number) || `${formatter(Number(number) / 1_000_000)} M`;
-export const toGiga = (number?: Nullable<number>, formatter = toRound) => holderFilter(number) || `${formatter(Number(number) / 1_000_000_000)} G`;
-export const toAutoUnit = (number?: Nullable<number>, formatter = toRound) => {
+export const toKiloSize = (number?: Nullable<number>, formatter = toRound) => holderFilter(number) || `${formatter(Number(number) / 1_024)} KB`;
+export const toMillionSize = (number?: Nullable<number>, formatter = toRound) => holderFilter(number) || `${formatter(Number(number) / 1024 / 1024)} MB`;
+export const toGigaSize = (number?: Nullable<number>, formatter = toRound) => holderFilter(number) || `${formatter(Number(number) / 1024 / 1024 / 1024)} GB`;
+export const toAutoUnitSize = (number?: Nullable<number>, formatter = toRound) => {
   const holder = holderFilter(number);
   if (holder) {
     return holder;
   }
   switch (true) {
-    case Number(number) < 1_000:
-      return formatter(number);
-    case Number(number) < 1_000_000:
-      return toKilo(number, formatter);
-    case Number(number) < 1_000_000_000:
-      return toMillionn(number, formatter);
+    case Number(number) < 1_024:
+      return `${formatter(number)} B`;
+    case Number(number) < 1024 * 1024:
+      return toKiloSize(number, formatter);
+    case Number(number) < 1024 * 1024 * 1024:
+      return toMillionSize(number, formatter);
     default:
-      return toGiga(number, formatter);
+      return toGigaSize(number, formatter);
   }
 };
-export const toIntAutoUnit = (number?: Nullable<number>) => number && number < 1000 ? toRound(number) : toAutoUnit(number, toFixed1);
+export const toIntAutoUnit = (number?: Nullable<number>) => number && number < 1000 ? toRound(number) : toAutoUnitSize(number, toFixed1);
 export const toTimeString = (seconds: Nullable<number>) => {
   if (seconds == null || holderFilter(seconds)) {
     return `${NAN_PLACEHOLDER}:${NAN_PLACEHOLDER}:${NAN_PLACEHOLDER}`;
@@ -80,5 +79,5 @@ const toPostFix = (rawValue: number) => {
 };
 export const toRMB = (number?: Nullable<number>, formatter = toRound) => `￥${formatter(number)}`;
 export const toRankText = (rank: number) => holderFilter(rank) || `${~~rank} ${toPostFix(rank)}`;
-export const toRankNode = (rank: number) => holderFilter(rank) ||  `<span>${~~rank}<sup>${toPostFix(rank)}</sup></span>`;
+export const toRankNode = (rank: number) => holderFilter(rank) || `<span>${~~rank}<sup>${toPostFix(rank)}</sup></span>`;
 export const toCeilSize = (originNum: number, gap: number = 10) => Math.ceil(originNum / gap) * gap;

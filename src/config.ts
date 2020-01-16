@@ -8,11 +8,14 @@ export const showAllFile = Boolean(args['a']);
 export const shareDir = Boolean(args['r']);
 export const exportPort = args['p'] || 8080;
 
+// path
+export const PUBLIC_PATH = resolve('./public');
+export const VIEW_PATH = resolve('./views');
+
 // config
-export const publicPath = resolve('./public');
 const flatDir = (filePath = ''): Array<string> => {
   const resFileList: Array<string> = [];
-  const files = readdirSync(join(publicPath, filePath), { withFileTypes: true });
+  const files = readdirSync(join(PUBLIC_PATH, filePath), { withFileTypes: true });
   for (const fileStat of files) {
     const curPath = `${filePath}/${fileStat.name}`;
     if (fileStat.isDirectory()) {

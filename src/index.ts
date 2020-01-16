@@ -1,13 +1,14 @@
-import { resolve } from 'path';
 import Express from 'express';
+import stylus from 'stylus';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import os from 'os';
 import chalk from 'chalk';
 import routes from './routes';
-import { exportPort, filePath, publicPath, publicResourceList, shareDir } from './config';
+import { exportPort, filePath, PUBLIC_PATH, publicResourceList, shareDir, VIEW_PATH } from './config';
 import { getCommonLogString } from './utils/log';
+import { resolve } from 'path';
 
 const app = Express();
 
@@ -21,9 +22,10 @@ console.log('分享地址为：', `\t${addressStr}`);
 console.log('分享目录为：', `\t${filePath}（${shareDir ? '' : '不'}含文件夹）`);
 
 // view engine setup
-app.set('views', resolve('./views'));
+app.set('views', VIEW_PATH);
 app.set('view engine', 'pug');
 
+// middlewares
 app.use(morgan(
   (tokens, req, res) => {
     const { ip, method, path } = req;
@@ -41,7 +43,12 @@ app.use(morgan(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(Express.static(publicPath));
+app.use(stylus.middleware({
+  src: VIEW_PATH,
+  dest: PUBLIC_PATH,
+  compress: true,
+}));
+app.use(Express.static(PUBLIC_PATH));
 
 // pages
 app.use('/', routes);
