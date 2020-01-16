@@ -4,6 +4,7 @@ import { readdirSync } from 'fs';
 // args
 export const args = require('minimist')(process.argv);
 export const filePath = resolve(args['_'][2] || '.');
+export const showAllFile = Boolean(args['a']);
 export const shareDir = Boolean(args['r']);
 export const exportPort = args['p'] || 8080;
 

@@ -2,7 +2,7 @@ import Express from 'express';
 import { join } from 'path';
 import { createReadStream, Dirent, readdir, stat } from 'fs';
 import { Response } from 'express-serve-static-core';
-import { filePath, shareDir } from './config';
+import { filePath, shareDir, showAllFile } from './config';
 import { getCommonLogString } from './utils/log';
 import { toAutoUnit } from './utils/number';
 
@@ -10,8 +10,9 @@ const router = Express.Router();
 
 const loadFiles = (res: Response, dirPath: string) => readdir(dirPath, { withFileTypes: true }, (err, results) => {
   if (err) throw err;
-  const directories: Array<Dirent> = results.filter(fileStat => fileStat.isDirectory());
-  const files: Array<Dirent> = results.filter(fileStat => fileStat.isFile());
+  const fileStats = showAllFile ? results : results.filter(fileStat => !(/(^|\/)\.[^\/.]/g).test(fileStat.name));
+  const directories: Array<Dirent> = fileStats.filter(fileStat => fileStat.isDirectory());
+  const files: Array<Dirent> = fileStats.filter(fileStat => fileStat.isFile());
   res.render('index', {
     upperDir: dirPath === filePath ? null : `${join(dirPath, '..').slice(filePath.length)}/`,
     directories: shareDir ? directories : [],

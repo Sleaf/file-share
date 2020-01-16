@@ -31,13 +31,13 @@
   "nodemonConfig": {
     "ignore": [
       ".git",
-      "node_modules/**/node_modules"
+      "node_modules/**"
     ],
     "watch": [
       "src/**",
       "views/**"
     ],
-    "exec": "ts-node src/index.ts",
+    "exec": "yarn share",
     "ext": "ts,js,json"
   }
 }
