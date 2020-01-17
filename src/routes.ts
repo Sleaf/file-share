@@ -50,7 +50,7 @@ router.get('*', (req, res) => {
         const startTime = Date.now();
         const closeHandler = () => {
           const rate = fileStat.size / ((Date.now() - startTime) / 1000);
-          console.log(logPrefix, '下载完成:', downloadFile, `${toAutoUnitSize(rate)}/s`);
+          console.log(logPrefix, '下载完成:', downloadFile, `---- ${toAutoUnitSize(rate)}/s`);
         };
         return createReadStream(downloadFile)
           .on('close', closeHandler)
