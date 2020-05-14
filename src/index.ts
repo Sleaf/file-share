@@ -1,23 +1,28 @@
 import Express from 'express';
 import stylus from 'stylus';
 import morgan from 'morgan';
+import _ from 'lodash';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import os from 'os';
 import chalk from 'chalk';
 import routes from './routes';
 import { exportPort, filePath, PUBLIC_PATH, publicResourceList, shareDir, VIEW_PATH } from './config';
-import { getCommonLogString } from './utils/log';
-import { resolve } from 'path';
+import { errMsg, getCommonLogString } from './utils/log';
 
 const app = Express();
 
 // network
 const ips = os.networkInterfaces();
-const avaliableIpv4 = Object.values(ips)
-  .map(item => item.filter(item => item.family === 'IPv4' && !item.internal)) // 只输出外网地址
-  .reduce((acc, item) => acc.concat(item), []);
-const addressStr = avaliableIpv4.map(({ address }) => `http://${address}:${exportPort}`).join('\n\t\t');
+const availableIpv4 = _.flatten(Object.values(ips))
+  .filter(item => item != null)
+  .filter(item => item && item.family === 'IPv4' && !item.internal);
+// 如果获取不到网络地址则退出
+if (availableIpv4.length < 1) {
+  errMsg('未找到可用的内网地址，请检查网络连接后再试。');
+  process.exit();
+}
+const addressStr = availableIpv4.map(item => item && `http://${item.address}:${exportPort}`).join('\n\t\t');
 console.log('分享地址为：', `\t${addressStr}`);
 console.log('分享目录为：', `\t${filePath}（${shareDir ? '' : '不'}含文件夹）`);
 
@@ -25,7 +30,7 @@ console.log('分享目录为：', `\t${filePath}（${shareDir ? '' : '不'}含�
 app.set('views', VIEW_PATH);
 app.set('view engine', 'pug');
 
-// middlewares
+// middleware
 app.use(morgan(
   (tokens, req, res) => {
     const { ip, method, path } = req;

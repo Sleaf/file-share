@@ -8,24 +8,26 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "chalk": "^3.0.0",
-    "cookie-parser": "^1.4.4",
-    "date-fns": "^2.8.1",
+    "chalk": "^4.0.0",
+    "cookie-parser": "^1.4.5",
+    "date-fns": "^2.13.0",
     "express": "^4.17.1",
-    "minimist": "^1.2.0",
-    "morgan": "^1.9.1",
-    "nodemon": "^2.0.2",
+    "lodash": "^4.17.15",
+    "minimist": "^1.2.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.3",
     "pug": "^2.0.4",
     "stylus": "^0.54.7",
-    "ts-node": "^8.5.4",
-    "typescript": "^3.7.4"
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.2"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.17.1",
+    "@types/body-parser": "^1.19.0",
     "@types/cookie-parser": "^1.4.2",
-    "@types/express": "^4.17.2",
-    "@types/morgan": "^1.7.37",
-    "@types/node": "^12.12.21",
+    "@types/express": "^4.17.6",
+    "@types/lodash": "^4.14.150",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^14.0.1",
     "@types/stylus": "^0.48.32"
   },
   "nodemonConfig": {
