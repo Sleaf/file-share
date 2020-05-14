@@ -5,6 +5,7 @@ import { Response } from 'express-serve-static-core';
 import { filePath, shareDir, showAllFile } from './config';
 import { getCommonLogString, getTimeString } from './utils/log';
 import { toAutoUnitSize } from './utils/number';
+import {UploadedFile} from "express-fileupload";
 
 const router = Express.Router();
 
@@ -62,6 +63,48 @@ router.get('*', (req, res) => {
         });
     }
   });
+});
+
+/**
+ * 实现文件上传
+ */
+router.post('/upload', async (req: Express.Request, res: Express.Response) => {
+  try {
+    const files = req.files ?? {};
+
+    if(!files) {
+      res.send({
+        status: false,
+        message: 'No file uploaded'
+      });
+    } else {
+      const data: {
+        name: string;
+        mimetype: string;
+        size: number;
+      }[] = [];
+      const fieldKey = 'fileList';
+      const list = files[fieldKey] instanceof Array ? files[fieldKey] : [files[fieldKey]];
+
+      (list as Array<UploadedFile>).forEach((file) => {
+        file.mv('./' + file.name);
+        data.push({
+          name: file.name,
+          mimetype: file.mimetype,
+          size: file.size
+        });
+      })
+
+      //return response
+      res.send({
+        status: true,
+        message: 'Files are uploaded',
+        data: data
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 export default router;
