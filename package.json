@@ -3,32 +3,47 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "cz": "git add -A && git-cz --disable-emoji",
     "dev": "nodemon",
-    "share": "ts-node src/index.ts"
+    "share": "yarn && ts-node src/index.ts"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "chalk": "^4.0.0",
+    "chalk": "^4.1.0",
     "cookie-parser": "^1.4.5",
-    "date-fns": "^2.13.0",
+    "date-fns": "^2.14.0",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
     "minimist": "^1.2.5",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.3",
-    "pug": "^2.0.4",
+    "nodemon": "^2.0.4",
+    "pug": "^3.0.0",
     "stylus": "^0.54.7",
-    "ts-node": "^8.10.1",
-    "typescript": "^3.9.2"
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@types/body-parser": "^1.19.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.6",
-    "@types/lodash": "^4.14.150",
-    "@types/morgan": "^1.9.0",
-    "@types/node": "^14.0.1",
-    "@types/stylus": "^0.48.32"
+    "@types/lodash": "^4.14.155",
+    "@types/morgan": "^1.9.1",
+    "@types/node": "^14.0.13",
+    "@types/stylus": "^0.48.33",
+    "git-cz": "^4.7.0",
+    "husky": "^4.2.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "nodemonConfig": {
     "ignore": [
