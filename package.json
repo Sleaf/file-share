@@ -1,6 +1,6 @@
 {
   "name": "file-share",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "cz": "git add -A && git-cz --disable-emoji",

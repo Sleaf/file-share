@@ -8,7 +8,6 @@ import { toAutoUnit } from '../../utils/number';
 
 export default (req: Request, res: Response) => {
   const downloadFile = join(filePath, decodeURI(req.path));
-  const logPrefix = getCommonLogString(req.ip);
   stat(downloadFile, async (err, fileStat) => {
     switch (true) {
       case fileStat?.isDirectory():
@@ -24,11 +23,11 @@ export default (req: Request, res: Response) => {
           'Content-Type': 'application/octet-stream',
           'Content-Length': fileStat.size,
         });
-        console.log(logPrefix, '下载文件:', downloadFile);
+        console.log(getCommonLogString(req.ip), '下载文件:', downloadFile);
         const startTime = Date.now();
         const closeHandler = () => {
           const rate = fileStat.size / ((Date.now() - startTime) / 1000);
-          console.log(logPrefix, '下载完成:', downloadFile, `---- ${toAutoUnit(rate)}B/s`);
+          console.log(getCommonLogString(req.ip), '下载完成:', downloadFile, `---- ${toAutoUnit(rate)}B/s`);
         };
         return createReadStream(downloadFile).on('close', closeHandler).pipe(res);
       default:

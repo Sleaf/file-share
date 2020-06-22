@@ -15,12 +15,11 @@ export default async (req: Express.Request, res: Express.Response) => {
     return res.end();
   }
   const basePath = path.join(filePath, req.path.replace(/(\/upload|..\/)/, ''));
-  const logPrefix = getCommonLogString(req.ip);
   // 检查是否可写
   try {
     fs.accessSync(basePath, fs.constants.W_OK);
   } catch (e) {
-    console.error(logPrefix, `上传失败：【${basePath}】`, e.message);
+    console.error(getCommonLogString(req.ip), `上传失败：【${basePath}】`, e.message);
     res.statusCode = 403;
     return res.end();
   }
@@ -34,13 +33,13 @@ export default async (req: Express.Request, res: Express.Response) => {
       const fileState = fs.statSync(fileDist);
       if (fileState.isFile() && !forceMode) {
         // 文件存在且未开放写入
-        console.error(logPrefix, `上传文件失败:【${fileDist}】，文件已存在，且非强制写入模式（-wf）。`);
+        console.error(getCommonLogString(req.ip), `上传文件失败:【${fileDist}】，文件已存在，且非强制写入模式（-wf）。`);
         res.statusCode = 403;
         return res.end();
       }
     } catch (e) {
       file.mv(fileDist);
-      console.log(logPrefix, `上传文件(${file.mimetype}):【${fileDist}】(${toAutoUnit(file.size)}B)`);
+      console.log(getCommonLogString(req.ip), `上传文件(${file.mimetype}):【${fileDist}】(${toAutoUnit(file.size)}B)`);
     }
   }
 
