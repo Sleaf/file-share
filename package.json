@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "cz": "git add -A && git-cz --disable-emoji",
-    "dev": "nodemon",
-    "share": "yarn && ts-node src/index.ts"
+    "dev": "nodemon ~/Public",
+    "share": "yarn && ts-node src/index.ts",
+    "pkg": "tsc && pkg ./package.json --out-path=dist-pkg/"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -59,5 +60,13 @@
     ],
     "exec": "yarn share",
     "ext": "ts,js,json"
+  },
+  "bin": "./build/src/index.js",
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "src/views/**/*",
+      "src/style/**/*"
+    ]
   }
 }

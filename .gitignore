@@ -1,5 +1,3 @@
-/build/
-
 ### Node template
 # Logs
 logs
@@ -141,4 +139,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-/web/build
+
+# custom
+build/
+dist-pkg/

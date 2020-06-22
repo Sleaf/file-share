@@ -40,6 +40,7 @@ const addressStr = availableIpv4.map(item => item && `http://${item.address}:${e
 // view engine setup
 app.set('views', VIEW_PATH);
 app.set('view engine', 'pug');
+app.engine('pug', require('pug').__express);
 
 // middleware
 app.use(morgan(
