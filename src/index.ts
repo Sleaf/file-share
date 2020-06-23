@@ -8,6 +8,7 @@ import os from 'os';
 import chalk from 'chalk';
 import nib from 'nib';
 import fileUpload from 'express-fileupload';
+import { __express } from 'pug';
 import routes from './routers';
 import { errMsg, getCommonLogString } from './utils/log';
 import {
@@ -38,9 +39,9 @@ if (availableIpv4.length < 1) {
 const addressStr = availableIpv4.map(item => item && `http://${item.address}:${exportPort}`).join('\n\t\t');
 
 // view engine setup
+app.engine('pug', __express);
 app.set('views', VIEW_PATH);
 app.set('view engine', 'pug');
-app.engine('pug', require('pug').__express);
 
 // middleware
 app.use(morgan(
@@ -57,9 +58,6 @@ app.use(morgan(
     ),
   },
 ));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(stylus.middleware({
   src: STYLE_PATH,
   dest: PUBLIC_PATH,
@@ -71,13 +69,16 @@ app.use(stylus.middleware({
       .use(nib())
       .import('nib'),
 }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(Express.static(PUBLIC_PATH));
 app.use(fileUpload({
   createParentPath: true,
 }));
 
 // pages
-app.use('/', routes);
+app.use(routes);
 
 // running
 app.listen(exportPort, () => {

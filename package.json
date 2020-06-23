@@ -52,11 +52,12 @@
   "nodemonConfig": {
     "ignore": [
       ".git",
-      "node_modules/**"
+      "node_modules/**",
+      "src/views/**/*",
+      "src/style/**/*"
     ],
     "watch": [
-      "src/**/*",
-      "public/**/*"
+      "src/**/*"
     ],
     "exec": "yarn share",
     "ext": "ts,js,json"

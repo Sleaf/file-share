@@ -1,30 +1,60 @@
 const uploadForm = document.getElementById('upload-form');
 const uploadInput = document.getElementById('upload-input');
-const uploadBtn = document.getElementsByClassName('upload-btn')[0];
-const uploadModal = document.getElementsByClassName('upload-modal')[0];
-const uploadArea = document.getElementsByClassName('upload-area')[0];
+const uploadBtn = document.getElementById('upload-btn');
+const uploadModal = document.getElementById('upload-modal');
+const uploadArea = document.getElementById('upload-area');
+const uploadingProgress = document.getElementById('uploading-progress');
 
-uploadBtn.addEventListener('click', uploadInput.click);
-uploadInput.addEventListener('change', upload);
-
-function upload() {
+function handleUpload() {
   const formData = new FormData(uploadForm);
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', uploadForm.action + window.location.pathname, true);
-  xhr.onload = function () {
-    window.location.reload();
+  if (xhr.upload) {
+    xhr.upload.onloadstart = function () {
+      uploadArea.firstChild.innerText = `上传中...`;
+      uploadingProgress.style.visibility = 'visible';
+      uploadingProgress.value = 0;
+    };
+    xhr.upload.onprogress = function (ev) {
+      if (ev.total > 0) {
+        uploadingProgress.value = ev.loaded / ev.total;
+      }
+    };
+  }
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status < 400) {
+        window.location.reload();
+      } else {
+        uploadArea.firstChild.innerText = `上传失败 - ${xhr.status}`;
+      }
+    }
   };
+  xhr.open('POST', uploadForm.action + window.location.pathname, true);
   xhr.send(formData);
 }
 
 let exitedTimer;
-window.addEventListener('dragenter', e => {
+
+function handleDragEnter() {
   clearTimeout(exitedTimer);
   uploadModal.classList.remove('drag-exit');
   uploadModal.classList.add('drag-over');
-});
+}
 
-uploadArea.addEventListener('dragleave', ev => {
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
+}
+
+function handleDragDrop(ev) {
+  window.dispatchEvent(new Event('dragleave'));
+  ev.preventDefault();
+  ev.stopPropagation();
+  uploadInput.files = ev.dataTransfer.files;
+  handleUpload();
+}
+
+function handleDragLeave() {
   if (!uploadModal.classList.contains('drag-over')) {
     return;
   }
@@ -35,18 +65,12 @@ uploadArea.addEventListener('dragleave', ev => {
   }
   exitedTimer = setTimeout(() => {
     uploadModal.classList.remove('drag-exit', 'drag-over');
-  }, 1000);
-});
+  }, 500);
+}
 
-uploadArea.addEventListener('dragover', e => {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'copy';
-}, false);
-
-uploadArea.addEventListener('drop', ev => {
-  window.dispatchEvent(new Event('dragleave'));
-  ev.preventDefault();
-  ev.stopPropagation();
-  uploadInput.files = ev.dataTransfer.files;
-  upload();
-});
+window.addEventListener('dragenter', handleDragEnter);
+uploadBtn.addEventListener('click', () => uploadInput.click());
+uploadInput.addEventListener('change', handleUpload);
+uploadArea.addEventListener('dragleave', handleDragLeave);
+uploadModal.addEventListener('dragover', handleDragOver, false);
+uploadModal.addEventListener('drop', handleDragDrop);

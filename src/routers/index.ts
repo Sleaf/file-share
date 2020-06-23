@@ -9,7 +9,7 @@ const router = Express.Router();
 router.post('/upload/*', handleUpload);
 /* 获取文件列表 */
 router.get('/', handleList);
-/* 下在文件 */
+/* 下载文件 */
 router.get('*', handleDownload);
 
 export default router;

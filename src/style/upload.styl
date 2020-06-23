@@ -1,0 +1,100 @@
+$btn-width = 50px
+$btn-edge-margin = 30px
+
+#upload-btn {
+  position fixed
+  width $btn-width
+  height $btn-width
+  right $btn-edge-margin
+  bottom $btn-edge-margin
+  border-radius 50%
+  padding 5px
+  cursor pointer
+  transition transform ease-in-out 300ms
+  transform rotate(180deg)
+
+  &:hover {
+    transform rotate(360deg)
+  }
+
+  img {
+    width 100%
+    border-radius 50%
+    -webkit-user-drag none
+  }
+}
+
+#upload-input {
+  visibility hidden
+}
+
+#upload-modal {
+  position fixed
+  right: 0
+  bottom: 0
+  width 100vw
+  height 100vh
+  z-index -1
+  transition transform 300ms, background-color 300ms
+  padding 30px
+
+  &.drag-over {
+    z-index 1
+    background-color rgba(255, 255, 255, 0.9)
+
+    @keyframes enter {
+      to {
+        border-radius 30px
+      }
+    }
+
+    #upload-area {
+      width: "calc(100% - %s)" % ($btn-edge-margin * 2)
+      height "calc(100% - %s)" % ($btn-edge-margin * 2)
+      animation enter linear 50ms forwards
+      font-size 30px
+    }
+  }
+
+  &.drag-exit {
+    z-index 1
+
+    @keyframes exit {
+      from {
+        transform rotate(0)
+      }
+      to {
+        transform rotate(360deg)
+      }
+    }
+
+    #upload-area {
+      animation enter linear 50ms 300ms forwards, exit ease-in-out 300ms 300ms
+    }
+  }
+
+  #upload-area {
+    border 1px dashed #000
+    position fixed
+    border-radius 50%
+    right $btn-edge-margin
+    bottom $btn-edge-margin
+    width $btn-width
+    height $btn-width
+    transition left ease-in-out 300ms, top ease-in-out 300ms, height ease-in-out 300ms, width ease-in-out 300ms, margin ease-in-out 100ms
+    transform rotate(360deg)
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    font-style italic
+    font-size 0
+    color grey
+  }
+
+  #uploading-progress {
+    visibility hidden
+    margin 1em 0
+  }
+}
+
