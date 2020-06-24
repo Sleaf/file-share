@@ -36,7 +36,6 @@ if (availableIpv4.length < 1) {
   errMsg('未找到可用的内网地址，请检查网络连接后再试。');
   process.exit();
 }
-const addressStr = availableIpv4.map(item => item && `http://${item.address}:${exportPort}`).join('\n\t\t');
 
 // view engine setup
 app.engine('pug', __express);
@@ -83,8 +82,12 @@ app.use(routes);
 // running
 app.listen(exportPort, () => {
   console.clear();
+  const shareAddress = availableIpv4.reduce((acc, addr, index) => ({
+    ...acc,
+    [`分享地址_${index + 1}`]: addr && `http://${addr.address}:${exportPort}`,
+  }), {});
   console.table({
-    '分享地址': addressStr,
+    ...shareAddress,
     '分享目录': filePath,
     '显示隐藏文件夹（-a）': showAllFile,
     '显示文件夹（-r）': shareDir,
