@@ -9,6 +9,7 @@ import chalk from 'chalk';
 import nib from 'nib';
 import fileUpload from 'express-fileupload';
 import { __express } from 'pug';
+import pkg from '../package.json';
 import routes from './routers';
 import { errMsg, getCommonLogString } from './utils/log';
 import {
@@ -87,6 +88,7 @@ app.listen(exportPort, () => {
     [`分享地址_${index + 1}`]: addr && `http://${addr.address}:${exportPort}`,
   }), {});
   console.table({
+    '版本': pkg.version,
     ...shareAddress,
     '分享目录': filePath,
     '显示隐藏文件夹（-a）': showAllFile,
