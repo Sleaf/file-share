@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import os from 'os';
 import chalk from 'chalk';
-import nib from 'nib';
 import fileUpload from 'express-fileupload';
 import { __express } from 'pug';
 import pkg from '../package.json';
@@ -18,6 +17,7 @@ import {
   forceMode,
   PUBLIC_PATH,
   PUBLIC_RESOURCE_PATH_LIST,
+  releaseMode,
   shareDir,
   showAllFile,
   STYLE_PATH,
@@ -44,6 +44,24 @@ app.set('views', VIEW_PATH);
 app.set('view engine', 'pug');
 
 // middleware
+if (!releaseMode) {
+  // 非发布模式下stylus才动态生成css
+  app.use(stylus.middleware({
+    src: STYLE_PATH,
+    dest: PUBLIC_PATH,
+    compress: true,
+    compile: (str, path) => stylus(str)
+      .set('filename', path)
+      .set('compress', true)
+      .use(require('nib')())
+      .import('nib'),
+  }));
+}
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(Express.static(PUBLIC_PATH));
+app.use(fileUpload({ createParentPath: true }));
 app.use(morgan(
   (tokens, req, res) => {
     const { ip, method, path } = req;
@@ -58,21 +76,6 @@ app.use(morgan(
     ),
   },
 ));
-app.use(stylus.middleware({
-  src: STYLE_PATH,
-  dest: PUBLIC_PATH,
-  compress: true,
-  compile: (str, path) => stylus(str)
-    .set('filename', path)
-    .set('compress', true)
-    .use(nib())
-    .import('nib'),
-}));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(Express.static(PUBLIC_PATH));
-app.use(fileUpload({ createParentPath: true }));
 
 // pages
 app.use(routes);
