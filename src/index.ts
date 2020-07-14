@@ -62,20 +62,17 @@ app.use(stylus.middleware({
   src: STYLE_PATH,
   dest: PUBLIC_PATH,
   compress: true,
-  compile: (str, path) =>
-    stylus(str)
-      .set('filename', path)
-      .set('compress', true)
-      .use(nib())
-      .import('nib'),
+  compile: (str, path) => stylus(str)
+    .set('filename', path)
+    .set('compress', true)
+    .use(nib())
+    .import('nib'),
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(Express.static(PUBLIC_PATH));
-app.use(fileUpload({
-  createParentPath: true,
-}));
+app.use(fileUpload({ createParentPath: true }));
 
 // pages
 app.use(routes);
@@ -88,7 +85,7 @@ app.listen(exportPort, () => {
     [`分享地址_${index + 1}`]: addr && `http://${addr.address}:${exportPort}`,
   }), {});
   console.table({
-    '版本': pkg.version,
+    '版本': `v${pkg.version}`,
     ...shareAddress,
     '分享目录': filePath,
     '显示隐藏文件夹（-a）': showAllFile,
