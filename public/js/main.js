@@ -5,6 +5,29 @@ const uploadModal = document.getElementById('upload-modal');
 const uploadArea = document.getElementById('upload-area');
 const uploadingProgress = document.getElementById('uploading-progress');
 
+function handleDragLeave() {
+  uploadModal.removeEventListener('dragleave', handleDragLeave);
+  uploadModal.classList.replace('drag-over', 'drag-exit');
+  window.addEventListener('dragover', handleDragEnter);
+}
+
+function handleDragDrop(e) {
+  e.preventDefault();
+  console.log('down');
+  uploadModal.removeEventListener('drop', handleDragDrop);
+  e.dataTransfer.dropEffect = 'copy';
+  uploadInput.files = e.dataTransfer.files;
+  handleUpload();
+}
+
+function handleDragEnter() {
+  uploadModal.classList.remove('drag-exit');
+  uploadModal.classList.add('drag-over');
+  window.removeEventListener('dragover', handleDragEnter);
+  uploadModal.addEventListener('dragleave', handleDragLeave);
+  uploadModal.addEventListener('drop', handleDragDrop);
+}
+
 function handleUpload() {
   const formData = new FormData(uploadForm);
   const xhr = new XMLHttpRequest();
@@ -33,44 +56,7 @@ function handleUpload() {
   xhr.send(formData);
 }
 
-let exitedTimer;
-
-function handleDragEnter() {
-  clearTimeout(exitedTimer);
-  uploadModal.classList.remove('drag-exit');
-  uploadModal.classList.add('drag-over');
-}
-
-function handleDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'copy';
-}
-
-function handleDragDrop(ev) {
-  window.dispatchEvent(new Event('dragleave'));
-  ev.preventDefault();
-  ev.stopPropagation();
-  uploadInput.files = ev.dataTransfer.files;
-  handleUpload();
-}
-
-function handleDragLeave() {
-  if (!uploadModal.classList.contains('drag-over')) {
-    return;
-  }
-
-  uploadModal.classList.replace('drag-over', 'drag-exit');
-  if (exitedTimer) {
-    clearTimeout(exitedTimer);
-  }
-  exitedTimer = setTimeout(() => {
-    uploadModal.classList.remove('drag-exit', 'drag-over');
-  }, 500);
-}
-
-window.addEventListener('dragenter', handleDragEnter);
+window.addEventListener('dragover', handleDragEnter);
+uploadModal.addEventListener('dragover', e => e.preventDefault());
 uploadBtn.addEventListener('click', () => uploadInput.click());
 uploadInput.addEventListener('change', handleUpload);
-uploadArea.addEventListener('dragleave', handleDragLeave);
-uploadModal.addEventListener('dragover', handleDragOver, false);
-uploadModal.addEventListener('drop', handleDragDrop);

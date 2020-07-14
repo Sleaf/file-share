@@ -1,5 +1,15 @@
 $btn-width = 50px
 $btn-edge-margin = 30px
+$animation-duration = 300ms
+
+@keyframes rotate {
+  from {
+    transform rotate(0)
+  }
+  to {
+    transform rotate(360deg)
+  }
+}
 
 #upload-btn {
   position fixed
@@ -10,7 +20,7 @@ $btn-edge-margin = 30px
   border-radius 50%
   padding 5px
   cursor pointer
-  transition transform ease-in-out 300ms
+  transition transform ease-in-out $animation-duration
   transform rotate(180deg)
 
   &:hover {
@@ -24,8 +34,8 @@ $btn-edge-margin = 30px
   }
 }
 
-#upload-input {
-  visibility hidden
+#upload-form {
+  display none
 }
 
 #upload-modal {
@@ -35,61 +45,42 @@ $btn-edge-margin = 30px
   width 100vw
   height 100vh
   z-index -1
-  transition transform 300ms, background-color 300ms
-  padding 30px
+  transition background-color $animation-duration
+  padding $btn-edge-margin
 
   &.drag-over {
     z-index 1
     background-color rgba(255, 255, 255, 0.9)
 
-    @keyframes enter {
-      to {
-        border-radius 30px
-      }
-    }
-
     #upload-area {
       width: "calc(100% - %s)" % ($btn-edge-margin * 2)
       height "calc(100% - %s)" % ($btn-edge-margin * 2)
-      animation enter linear 50ms forwards
       font-size 30px
     }
   }
 
   &.drag-exit {
-    z-index 1
-
-    @keyframes exit {
-      from {
-        transform rotate(0)
-      }
-      to {
-        transform rotate(360deg)
-      }
-    }
-
     #upload-area {
-      animation enter linear 50ms 300ms forwards, exit ease-in-out 300ms 300ms
+      animation rotate $animation-duration $animation-duration
     }
   }
 
   #upload-area {
     border 1px dashed #000
     position fixed
-    border-radius 50%
+    border-radius ($btn-width/ 2)
+    pointer-events none
     right $btn-edge-margin
     bottom $btn-edge-margin
     width $btn-width
     height $btn-width
-    transition left ease-in-out 300ms, top ease-in-out 300ms, height ease-in-out 300ms, width ease-in-out 300ms, margin ease-in-out 100ms
-    transform rotate(360deg)
     display flex
     flex-direction column
     align-items center
     justify-content center
-    font-style italic
     font-size 0
     color grey
+    transition $animation-duration
   }
 
   #uploading-progress {
