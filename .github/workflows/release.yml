@@ -8,7 +8,7 @@ on:
     - 'v*'
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,23 +21,24 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Pack releases
-      run: npm run pkg
-      
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-    
+
+    - name: Packaged releases assets
+      run: npm run pkg
+
     - name: Upload Release Assets
       id: upload-release-assets 
       uses: csexton/release-asset-action@v2
       with:
         pattern: "dist-pkg/*"
-        github-token: ${{ secrets.GITHUB_TOKEN }}     
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        release-url: ${{ steps.create_release.outputs.upload_url }}
