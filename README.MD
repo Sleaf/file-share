@@ -21,6 +21,6 @@ yarn pkg
 ## TODOs
 - [x] 添加CI/CD支持，更改version时自动打tag并发布release
 - [x] 拖拽上传
-- [ ] 优化io流程（替换所有同步方法）
+- [x] 优化io流程
 - [ ] 前端重构为SPA，与后端走RESTful API
 - [ ] Electron支持

@@ -1,9 +1,9 @@
 import Express from 'express';
 import path from 'path';
-import fs from 'fs';
-import { getCommonLogString } from '../../utils/log';
-import { filePath, forceMode, writeMode } from '../../config';
-import { toAutoUnit } from '../../utils/number';
+import fs, { promises as fsPromise } from 'fs';
+import { getCommonLogString } from '@/utils/log';
+import { filePath, forceMode, writeMode } from '@/config';
+import { toAutoUnit } from '@/utils/number';
 
 export default async (req: Express.Request, res: Express.Response) => {
   if (!req.files) {
@@ -17,7 +17,7 @@ export default async (req: Express.Request, res: Express.Response) => {
   const basePath = path.join(filePath, req.path.replace(/(\/upload|..\/)/, ''));
   // 检查是否可写
   try {
-    fs.accessSync(basePath, fs.constants.W_OK);
+    await fsPromise.access(basePath, fs.constants.W_OK);
   } catch (e) {
     console.error(getCommonLogString(req.ip), `上传失败：【${basePath}】`, e.message);
     res.statusCode = 403;
@@ -29,8 +29,7 @@ export default async (req: Express.Request, res: Express.Response) => {
     const fileDist = path.join(basePath, file.name);
     // 检查文件状态
     try {
-
-      const fileState = fs.statSync(fileDist);
+      const fileState = await fsPromise.stat(fileDist);
       if (fileState.isFile() && !forceMode) {
         // 文件存在且未开放写入
         console.error(getCommonLogString(req.ip), `上传文件失败:【${fileDist}】，文件已存在，且非强制写入模式（-wf）。`);
