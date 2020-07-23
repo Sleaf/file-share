@@ -4,8 +4,8 @@
 ## 使用说明
 >⚠️ 此程序仅作为局域网内轻量共享访问使用，多关注运行日志，请勿长期运行。
 
-### 使用[release版本](/releases/latest)（推荐）
-  > 目前使用pkg打包运行，之后可能会改为带gui的electron。
+### 使用[release版本](https://github.com/Sleaf/file-share/releases)（推荐）
+> 目前使用pkg打包运行，之后可能会改为带gui的electron。
 
 默认分享运行程序的文件夹，如果需要输入参数，可将程序拖入控制台取得路径，在后面添加运行参数，参数同[直接使用代码](#直接使用项目代码)。
 
