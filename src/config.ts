@@ -14,9 +14,11 @@ export const filePath = args['_'][2] ? resolve(args['_'][2]) : resolve(process.e
 // path
 export const ROOT_PATH = resolve(__dirname, '../');
 export const SRC_PATH = resolve(ROOT_PATH, './src');
-export const PUBLIC_PATH = resolve(ROOT_PATH, './public');
-export const VIEW_PATH = resolve(SRC_PATH, './views');
-export const STYLE_PATH = resolve(SRC_PATH, './style');
+export const SRC_SEVER_PATH = resolve(SRC_PATH, './server');
+export const SRC_CLIENT_PATH = resolve(SRC_PATH, './client');
+export const PUBLIC_PATH = resolve(SRC_CLIENT_PATH, './public');
+export const VIEW_PATH = resolve(SRC_CLIENT_PATH, './views');
+export const STYLE_PATH = resolve(SRC_CLIENT_PATH, './style');
 export const PUBLIC_RESOURCE_PATH_LIST = (function flatDir(filePath = ''): Array<string> {
   const resFileList: Array<string> = [];
   const files = readdirSync(join(PUBLIC_PATH, filePath), { withFileTypes: true });

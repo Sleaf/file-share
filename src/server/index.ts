@@ -22,7 +22,7 @@ import {
   STYLE_PATH, VERSION,
   VIEW_PATH,
   writeMode,
-} from './config';
+} from '@/config';
 
 const app = Express();
 

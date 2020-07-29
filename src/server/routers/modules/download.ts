@@ -1,9 +1,9 @@
 import fs, { promises as fsPromise } from 'fs';
 import { join, relative } from 'path';
 import { Request, Response } from 'express-serve-static-core';
-import { isUnixHiddenFilename, loadFiles } from '@/utils/file';
+import { isUnixHiddenFilename, loadFiles } from '@/server/utils/file';
 import { filePath, shareDir, showAllFile, writeMode } from '@/config';
-import { getCommonLogString } from '@/utils/log';
+import { getCommonLogString } from '@/server/utils/log';
 import { toAutoUnit } from '@/utils/number';
 
 export default async (req: Request, res: Response) => {

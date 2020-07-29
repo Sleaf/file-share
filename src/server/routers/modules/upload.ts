@@ -1,7 +1,7 @@
 import Express from 'express';
 import path from 'path';
 import fs, { promises as fsPromise } from 'fs';
-import { getCommonLogString } from '@/utils/log';
+import { getCommonLogString } from '@/server/utils/log';
 import { filePath, forceMode, writeMode } from '@/config';
 import { toAutoUnit } from '@/utils/number';
 

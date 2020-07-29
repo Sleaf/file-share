@@ -2,7 +2,7 @@ import path from 'path';
 import { promises as fsPromise } from 'fs';
 import { showAllFile } from '@/config';
 import { toAutoUnit } from '@/utils/number';
-import { getTimeString } from '@/utils/log';
+import { getTimeString } from '@/server/utils/log';
 
 type FileItem = {
   name: string;

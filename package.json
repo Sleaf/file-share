@@ -2,12 +2,12 @@
   "name": "file-share",
   "version": "0.1.4",
   "private": true,
-  "main": "src/index.ts",
-  "bin": "./build/index.js",
+  "main": "src/server/index.ts",
+  "bin": "./build/server/index.js",
   "scripts": {
     "cz": "git add -A && git-cz --disable-emoji",
     "dev-cli": "nodemon --config ./nodemon-cli.json ~/Public",
-    "start-cli": "ts-node -r tsconfig-paths/register src/index.ts",
+    "start-cli": "ts-node -r tsconfig-paths/register src/server/index.ts",
     "build-pkg": "run-s tsc-tspm pkg",
     "tsc-tspm": "tsc; ef-tspm",
     "pkg": "pkg ./package.json --out-path=dist-pkg/"
@@ -59,9 +59,9 @@
   },
   "pkg": {
     "assets": [
-      "public/**/*",
-      "src/views/**/*",
-      "src/style/**/*",
+      "src/client/public/**/*",
+      "src/client/views/**/*",
+      "src/client/style/**/*",
       "package.json"
     ]
   }
