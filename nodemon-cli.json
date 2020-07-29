@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    ".git",
+    "node_modules/**",
+    "src/views/**/*",
+    "src/style/**/*"
+  ],
+  "watch": [
+    "src/**/*",
+    "package.json"
+  ],
+  "exec": "yarn start-cli",
+  "ext": "ts,js,json"
+}

@@ -33,7 +33,7 @@ jobs:
         prerelease: false
 
     - name: Packaged releases assets
-      run: npm run pkg
+      run: npm run build-pkg
 
     - name: Upload Release Assets
       id: upload-release-assets 

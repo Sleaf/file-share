@@ -8,19 +8,18 @@ import os from 'os';
 import chalk from 'chalk';
 import fileUpload from 'express-fileupload';
 import { __express } from 'pug';
-import pkg from '../package.json';
 import routes from './routers';
 import { errMsg, getCommonLogString } from './utils/log';
 import {
   exportPort,
   filePath,
   forceMode,
+  pkgMode,
   PUBLIC_PATH,
   PUBLIC_RESOURCE_PATH_LIST,
-  releaseMode,
   shareDir,
   showAllFile,
-  STYLE_PATH,
+  STYLE_PATH, VERSION,
   VIEW_PATH,
   writeMode,
 } from './config';
@@ -44,7 +43,7 @@ app.set('views', VIEW_PATH);
 app.set('view engine', 'pug');
 
 // middleware
-if (!releaseMode) {
+if (!pkgMode) {
   // 非发布模式下stylus才动态生成css
   app.use(stylus.middleware({
     src: STYLE_PATH,
@@ -88,7 +87,7 @@ app.listen(exportPort, () => {
     [`分享地址_${index + 1}`]: addr && `http://${addr.address}:${exportPort}`,
   }), {});
   console.table({
-    '版本': `v${pkg.version}`,
+    '版本': `v${VERSION}`,
     ...shareAddress,
     '分享目录': filePath,
     '显示隐藏文件夹（-a）': showAllFile,

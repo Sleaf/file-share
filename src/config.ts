@@ -7,15 +7,16 @@ export const showAllFile = Boolean(args['a']);
 export const shareDir = Boolean(args['r']);
 export const writeMode = Boolean(args['w']);
 export const forceMode = Boolean(args['f']);
-export const releaseMode = Boolean((process as any).pkg?.entrypoint);
+export const pkgMode = Boolean((process as any).pkg?.entrypoint);
 export const exportPort = args['p'] || 8080;
-export const cwd = resolve(__dirname, '../', releaseMode ? '../' : '');
 export const filePath = args['_'][2] ? resolve(args['_'][2]) : resolve(process.execPath, '../');
 
 // path
-export const PUBLIC_PATH = resolve(cwd, './public');
-export const VIEW_PATH = resolve(cwd, './src/views');
-export const STYLE_PATH = resolve(cwd, './src/style');
+export const ROOT_PATH = resolve(__dirname, '../');
+export const SRC_PATH = resolve(ROOT_PATH, './src');
+export const PUBLIC_PATH = resolve(ROOT_PATH, './public');
+export const VIEW_PATH = resolve(SRC_PATH, './views');
+export const STYLE_PATH = resolve(SRC_PATH, './style');
 export const PUBLIC_RESOURCE_PATH_LIST = (function flatDir(filePath = ''): Array<string> {
   const resFileList: Array<string> = [];
   const files = readdirSync(join(PUBLIC_PATH, filePath), { withFileTypes: true });
@@ -30,3 +31,8 @@ export const PUBLIC_RESOURCE_PATH_LIST = (function flatDir(filePath = ''): Array
   }
   return resFileList;
 })();
+
+// info
+export const VERSION = pkgMode
+  ? require(resolve(ROOT_PATH, './package.json')).version
+  : process.env.npm_package_version;
