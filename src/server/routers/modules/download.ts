@@ -12,8 +12,7 @@ export default async (req: Request, res: Response) => {
   let fileStat;
   try {
     fileStat = await fsPromise.stat(targetFile);
-  } catch (e) {
-  }
+  } catch (e) {}
   switch (true) {
     case !showAllFile && isUnixHiddenFilename(targetFile):
       console.log(getCommonLogString(req.ip), '访问隐藏文件被禁止:', targetFile);
@@ -44,4 +43,4 @@ export default async (req: Request, res: Response) => {
   return res.render('error', {
     message: 'File or directory was not found!',
   });
-}
+};

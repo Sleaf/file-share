@@ -8,8 +8,6 @@ import os from 'os';
 import chalk from 'chalk';
 import fileUpload from 'express-fileupload';
 import { __express } from 'pug';
-import routes from './routers';
-import { errMsg, getCommonLogString } from './utils/log';
 import {
   exportPort,
   filePath,
@@ -19,10 +17,13 @@ import {
   PUBLIC_RESOURCE_PATH_LIST,
   shareDir,
   showAllFile,
-  STYLE_PATH, VERSION,
+  STYLE_PATH,
+  VERSION,
   VIEW_PATH,
   writeMode,
 } from '@/config';
+import routes from './routers';
+import { errMsg, getCommonLogString } from './utils/log';
 
 const app = Express();
 
@@ -45,36 +46,36 @@ app.set('view engine', 'pug');
 // middleware
 if (!pkgMode) {
   // 非发布模式下stylus才动态生成css
-  app.use(stylus.middleware({
-    src: STYLE_PATH,
-    dest: PUBLIC_PATH,
-    compress: true,
-    compile: (str, path) => stylus(str)
-      .set('filename', path)
-      .set('compress', true)
-      .use(require('nib')())
-      .import('nib'),
-  }));
+  app.use(
+    stylus.middleware({
+      src: STYLE_PATH,
+      dest: PUBLIC_PATH,
+      compress: true,
+      compile: (str, path) =>
+        stylus(str).set('filename', path).set('compress', true).use(require('nib')()).import('nib'),
+    }),
+  );
 }
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(Express.static(PUBLIC_PATH));
 app.use(fileUpload({ createParentPath: true }));
-app.use(morgan(
-  (tokens, req, res) => {
-    const { ip, method, path } = req;
-    const { statusCode } = res;
-    const stateStr = (statusCode < 400 ? chalk.green : chalk.red)(`${statusCode}-${method}`);
-    return `${getCommonLogString(ip)} ${stateStr} ${path} `;
-  },
-  {
-    skip: (req) => (
-      PUBLIC_RESOURCE_PATH_LIST.some(item => (req.url === item)) // 静态资源
-      || req.res?.getHeader('Content-Type') === 'application/octet-stream' // 下载的文件
-    ),
-  },
-));
+app.use(
+  morgan(
+    (tokens, req, res) => {
+      const { ip, method, path } = req;
+      const { statusCode } = res;
+      const stateStr = (statusCode < 400 ? chalk.green : chalk.red)(`${statusCode}-${method}`);
+      return `${getCommonLogString(ip)} ${stateStr} ${path} `;
+    },
+    {
+      skip: req =>
+        PUBLIC_RESOURCE_PATH_LIST.some(item => req.url === item) || // 静态资源
+        req.res?.getHeader('Content-Type') === 'application/octet-stream', // 下载的文件
+    },
+  ),
+);
 
 // pages
 app.use(routes);
@@ -82,14 +83,17 @@ app.use(routes);
 // running
 app.listen(exportPort, () => {
   console.clear();
-  const shareAddress = availableIpv4.reduce((acc, addr, index) => ({
-    ...acc,
-    [`分享地址_${index + 1}`]: addr && `http://${addr.address}:${exportPort}`,
-  }), {});
+  const shareAddress = availableIpv4.reduce(
+    (acc, addr, index) => ({
+      ...acc,
+      [`分享地址_${index + 1}`]: addr && `http://${addr.address}:${exportPort}`,
+    }),
+    {},
+  );
   console.table({
-    '版本': `v${VERSION}`,
+    版本: `v${VERSION}`,
     ...shareAddress,
-    '分享目录': filePath,
+    分享目录: filePath,
     '显示隐藏文件夹（-a）': showAllFile,
     '显示文件夹（-r）': shareDir,
     '允许上传（-w）': writeMode,

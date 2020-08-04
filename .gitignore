@@ -141,5 +141,5 @@ Temporary Items
 .apdisk
 
 # custom
-build/
-dist-pkg/
+build*
+dist-pkg*

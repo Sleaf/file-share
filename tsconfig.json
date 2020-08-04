@@ -5,9 +5,10 @@
     "alwaysStrict": true,
     "baseUrl": ".",
     "esModuleInterop": true,
+    "jsx": "react",
     "module": "commonjs",
     "noImplicitAny": false,
-    "outDir": "./build",
+    "outDir": "./build-src",
     "paths": {
       "@/*": [
         "src/*"
@@ -24,9 +25,6 @@
     "node_modules"
   ],
   "include": [
-    "./*.ts",
-    "./src/**/*.js",
-    "./src/**/*.ts",
-    "./src/**/*.tsx"
+    "./src/**/*"
   ]
 }

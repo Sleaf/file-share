@@ -32,7 +32,10 @@ export default async (req: Express.Request, res: Express.Response) => {
       const fileState = await fsPromise.stat(fileDist);
       if (fileState.isFile() && !forceMode) {
         // 文件存在且未开放写入
-        console.error(getCommonLogString(req.ip), `上传文件失败:【${fileDist}】，文件已存在，且非强制写入模式（-wf）。`);
+        console.error(
+          getCommonLogString(req.ip),
+          `上传文件失败:【${fileDist}】，文件已存在，且非强制写入模式（-wf）。`,
+        );
         res.statusCode = 403;
         return res.end();
       }
@@ -45,4 +48,4 @@ export default async (req: Express.Request, res: Express.Response) => {
   // success
   res.statusCode = 201;
   return res.end();
-}
+};

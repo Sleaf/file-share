@@ -1,0 +1,61 @@
+body {
+  font-family: Apple-System, Arial, Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', STXihei, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  min-width: 1366px;
+  min-height: 768px;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  padding: 0;
+
+  &:visited,
+  &:hover,
+  &:focus {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.no-touch {
+  user-select: none;
+}
+
+.has-link:not(.selected) {
+  cursor: pointer;
+}
+
+.placeholder {
+  opacity: 0;
+}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+  @scrollbar-width: 10px;
+  width: @scrollbar-width;
+  height: @scrollbar-width;
+
+  &-track {
+    border-radius: (@scrollbar-width / 2);
+    background: transparent;
+  }
+
+  &-thumb {
+    transition: background-color .2s;
+    border-radius: (@scrollbar-width / 2);
+    background-color: fade(darkgrey, 40);
+
+    &:hover {
+      background-color: fade(darkgrey, 60);
+    }
+  }
+}
