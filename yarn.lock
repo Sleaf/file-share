@@ -1324,10 +1324,10 @@ expand-template@^2.0.3:
   resolved "https://registry.npm.taobao.org/expand-template/download/expand-template-2.0.3.tgz#6e14b3fcee0f3a6340ecb57d2e8918692052a47c"
   integrity sha1-bhSz/O4POmNA7LV9LokYaSBSpHw=
 
-express-fileupload@^1.1.7-alpha.4:
-  version "1.1.7-alpha.4"
-  resolved "https://registry.npm.taobao.org/express-fileupload/download/express-fileupload-1.1.7-alpha.4.tgz#c87dcb7880fe2e5a1d15ea97a225719c5ac0a30d"
-  integrity sha1-yH3LeID+LlodFeqXoiVxnFrAow0=
+express-fileupload@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.npm.taobao.org/express-fileupload/download/express-fileupload-1.1.9.tgz#e798e9318394ed5083e56217ad6cda576da465d2"
+  integrity sha1-55jpMYOU7VCD5WIXrWzaV22kZdI=
   dependencies:
     busboy "^0.3.1"
 
