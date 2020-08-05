@@ -2,9 +2,9 @@ import os from 'os';
 import merge from 'webpack-merge';
 import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 import common, { BUILD_RESOURCE_NAME, isWindows, PUBLIC_PATH } from './webpack.common';
+import { exportPort } from './src/config';
 
 // Network
-const exportPort = Number(process.env.PORT) || 8001;
 const ips = os.networkInterfaces();
 const availableIpv4 = Object.values(ips)
   .map(item => item!.filter(addr => addr.family === 'IPv4' && !addr.internal)) // 只输出外网地址
@@ -21,10 +21,10 @@ const devServer = {
   quiet: true,
   overlay: true,
   host: isWindows ? availableIpv4[0] || '127.0.0.1' : '0.0.0.0',
-  port: exportPort,
+  port: 8001,
   proxy: {
     [`${PUBLIC_PATH}api`]: {
-      target: 'http://localhost',
+      target: `http://0.0.0.0:${exportPort}`,
       secure: false,
       changeOrigin: true,
     },

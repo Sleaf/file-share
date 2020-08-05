@@ -1,11 +1,14 @@
 import Express from 'express';
-import path from 'path';
+import path, { join } from 'path';
 import fs, { promises as fsPromise } from 'fs';
 import { getCommonLogString } from '@/server/utils/log';
 import { filePath, forceMode, writeMode } from '@/config';
 import { toAutoUnit } from '@/utils/number';
+import { toSafeFilePath } from '@/utils/string';
 
 export default async (req: Express.Request, res: Express.Response) => {
+  const receivedPath = toSafeFilePath(decodeURI(req.query.path as string));
+  const targetFile = join(filePath, receivedPath);
   if (!req.files) {
     res.statusCode = 400;
     return res.end();
@@ -14,19 +17,18 @@ export default async (req: Express.Request, res: Express.Response) => {
     res.statusCode = 403;
     return res.end();
   }
-  const basePath = path.join(filePath, req.path.replace(/(\/upload|..\/)/, ''));
   // 检查是否可写
   try {
-    await fsPromise.access(basePath, fs.constants.W_OK);
+    await fsPromise.access(targetFile, fs.constants.W_OK);
   } catch (e) {
-    console.error(getCommonLogString(req.ip), `上传失败：【${basePath}】`, e.message);
+    console.error(getCommonLogString(req.ip), `上传失败：【${targetFile}】`, e.message);
     res.statusCode = 403;
     return res.end();
   }
   const uploadList = Array.isArray(req.files.fileList) ? req.files.fileList : [req.files.fileList];
   // 处理所有文件
   for (const file of uploadList) {
-    const fileDist = path.join(basePath, file.name);
+    const fileDist = path.join(targetFile, file.name);
     // 检查文件状态
     try {
       const fileState = await fsPromise.stat(fileDist);
@@ -41,7 +43,7 @@ export default async (req: Express.Request, res: Express.Response) => {
       }
     } catch (e) {
       file.mv(fileDist);
-      console.log(getCommonLogString(req.ip), `上传文件(${file.mimetype}):【${fileDist}】(${toAutoUnit(file.size)}B)`);
+      console.log(getCommonLogString(req.ip), `上传文件:【${fileDist}】(${toAutoUnit(file.size)}B)`);
     }
   }
 

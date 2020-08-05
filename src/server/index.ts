@@ -1,25 +1,21 @@
 import Express from 'express';
-import stylus from 'stylus';
 import morgan from 'morgan';
 import _ from 'lodash';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import os from 'os';
+import fs from 'fs';
 import chalk from 'chalk';
 import fileUpload from 'express-fileupload';
-import { __express } from 'pug';
 import {
   exportPort,
+  FE_BUILD_PATH,
+  FE_INDEX_PATH,
   filePath,
   forceMode,
-  pkgMode,
-  PUBLIC_PATH,
-  PUBLIC_RESOURCE_PATH_LIST,
   shareDir,
   showAllFile,
-  STYLE_PATH,
   VERSION,
-  VIEW_PATH,
   writeMode,
 } from '@/config';
 import routes from './routers';
@@ -38,28 +34,9 @@ if (availableIpv4.length < 1) {
   process.exit();
 }
 
-// view engine setup
-app.engine('pug', __express);
-app.set('views', VIEW_PATH);
-app.set('view engine', 'pug');
-
-// middleware
-if (!pkgMode) {
-  // 非发布模式下stylus才动态生成css
-  app.use(
-    stylus.middleware({
-      src: STYLE_PATH,
-      dest: PUBLIC_PATH,
-      compress: true,
-      compile: (str, path) =>
-        stylus(str).set('filename', path).set('compress', true).use(require('nib')()).import('nib'),
-    }),
-  );
-}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(Express.static(PUBLIC_PATH));
 app.use(fileUpload({ createParentPath: true }));
 app.use(
   morgan(
@@ -70,15 +47,36 @@ app.use(
       return `${getCommonLogString(ip)} ${stateStr} ${path} `;
     },
     {
-      skip: req =>
-        PUBLIC_RESOURCE_PATH_LIST.some(item => req.url === item) || // 静态资源
-        req.res?.getHeader('Content-Type') === 'application/octet-stream', // 下载的文件
+      skip(req) {
+        switch (true) {
+          case req.url?.startsWith('/resources'): // 静态资源
+          case req.url?.startsWith('/status'):
+          case req.res?.getHeader('Content-Type') === 'application/octet-stream': // 下载的文件
+            return true;
+          default:
+            return false;
+        }
+      },
     },
   ),
 );
 
 // pages
-app.use(routes);
+app.use('/api', routes);
+app.use(Express.static(FE_BUILD_PATH));
+app.use('*', (req, res) =>
+  fs.readFile(FE_INDEX_PATH, 'utf-8', (err, content) => {
+    if (err) {
+      res.status(404);
+      res.end();
+    } else {
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+      });
+      res.end(content);
+    }
+  }),
+);
 
 // running
 app.listen(exportPort, () => {

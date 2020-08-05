@@ -9,6 +9,6 @@
     "src/**/*",
     "package.json"
   ],
-  "exec": "yarn start-cli",
+  "exec": "yarn start-server",
   "ext": "ts,js,json"
 }

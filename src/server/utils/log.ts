@@ -1,8 +1,12 @@
-import dateFormat from 'date-fns/format';
 import chalk from 'chalk';
+import { toDateString } from '@/utils/date';
 
-export const getTimeString = (time = new Date(), format = 'MM/dd-HH:mm:ss.SSS') => dateFormat(time, format);
+/*
+ * 客户端访问log
+ * */
+export const getCommonLogString = (ip: string) => `${chalk.blue(toDateString())} ${chalk.cyan(ip)}`;
 
-export const getCommonLogString = (ip: string) => `${chalk.blue(getTimeString())} ${chalk.cyan(ip)}`;
-
+/*
+ * 错误log
+ * */
 export const errMsg = (...arg: Array<any>) => console.log(chalk.red(...arg));

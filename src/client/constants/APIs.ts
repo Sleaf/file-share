@@ -5,10 +5,7 @@
  * */
 /* Utils */
 import { GET } from '@/utils/request';
+import { FileListData, ServerStatus } from '@/@types/transition';
 
-export const FETCH_FILE_LIST = () =>
-  GET<{
-    lastUpdate: Timestamp;
-    fileList: Array<FileItem>;
-  }>`/api/list`({ path: window.location.pathname });
-export const GET_SERVER_STATUS = () => GET<ServerStatus>`/api/status`();
+export const FETCH_FILE_LIST = (path: string) => GET<FileListData>`/api/list`({ path });
+export const GET_SERVER_STATUS = (path: string) => GET<ServerStatus>`/api/status`({ path });

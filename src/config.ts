@@ -1,5 +1,4 @@
-import { join, resolve } from 'path';
-import { readdirSync } from 'fs';
+import { resolve } from 'path';
 
 // args
 export const args = require('minimist')(process.argv);
@@ -19,25 +18,10 @@ export const BUILD_SRC_PATH = resolve(ROOT_PATH, './build-src');
 export const SRC_PATH = resolve(ROOT_PATH, './src');
 export const SRC_SEVER_PATH = resolve(SRC_PATH, './server');
 export const SRC_CLIENT_PATH = resolve(SRC_PATH, './client');
-export const PUBLIC_PATH = resolve(SRC_CLIENT_PATH, './public');
-export const VIEW_PATH = resolve(SRC_CLIENT_PATH, './views');
-export const STYLE_PATH = resolve(SRC_CLIENT_PATH, './style');
-export const PUBLIC_RESOURCE_PATH_LIST = (function flatDir(path = ''): Array<string> {
-  const resFileList: Array<string> = [];
-  const files = readdirSync(join(PUBLIC_PATH, path), { withFileTypes: true });
-  for (const fileStat of files) {
-    const curPath = `${path}/${fileStat.name}`;
-    if (fileStat.isDirectory()) {
-      const fileList = flatDir(curPath).map(item => path + item);
-      resFileList.push(...fileList);
-    } else {
-      resFileList.push(curPath);
-    }
-  }
-  return resFileList;
-})();
+export const FE_BUILD_PATH = resolve(BUILD_PATH, './client');
+export const FE_RESOURCE_PATH = resolve(FE_BUILD_PATH, './resources');
+export const FE_INDEX_PATH = resolve(FE_BUILD_PATH, './index.html');
 
-// info
 export const VERSION = pkgMode
   ? require(resolve(ROOT_PATH, './package.json')).version
   : process.env.npm_package_version;

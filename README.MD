@@ -14,7 +14,7 @@ Linux和MacOS环境可能需要chmod +x file-share-xxx添加运行权限
 ### 直接使用项目代码
 ```shell script
 #分享文件（默认为运行目录）
-yarn start-cli [path_you_want_to_share] [options] 
+yarn start-server [path_you_want_to_share] [options] 
    # -r 显示子文件夹  
    # -a 显示隐藏文件  
    # -w 允许上传文件
@@ -25,7 +25,7 @@ yarn start-cli [path_you_want_to_share] [options]
 ## 开发说明
 ```shell script
 # 开发模式，参数同share，默认共享~/Public文件夹
-yarn dev-cli 
+yarn dev-server 
 
 # 打包二进制文件
 yarn build-pkg
@@ -36,4 +36,5 @@ yarn build-pkg
 - [x] 拖拽上传
 - [x] 优化io流程
 - [ ] Electron支持
-- [ ] 前端重构为SPA，与后端走RESTful API
+- [x] 前端重构为SPA，与后端走RESTful API
+- [ ] 使用ws代替状态轮询

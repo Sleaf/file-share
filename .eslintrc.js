@@ -57,6 +57,7 @@ module.exports = {
     // imports
     'import/no-dynamic-require': OFF,
     'import/no-extraneous-dependencies': OFF,
+    'import/no-mutable-exports': OFF,
     'import/no-named-as-default': OFF,
     'import/no-unresolved': OFF,
     'import/order': ERROR,

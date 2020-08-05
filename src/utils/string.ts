@@ -123,3 +123,8 @@ export const parseQuery = (template = '') => {
  * */
 export const getRegxOrder = (template: string, regexp: string | RegExp, path: string | number): string =>
   _.get(template.match(regexp), path) || '';
+
+/*
+ * 转换为安全的路径（防止注入）
+ * */
+export const toSafeFilePath = (path: string) => path.replace(/\.\.\//g, '');
