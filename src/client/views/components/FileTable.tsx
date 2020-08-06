@@ -36,8 +36,8 @@ const FileTable = ({ data, loading, heightOffset }: FileTableProp) => {
       console.warn(e);
     }
     const sortHandler = toCompareSorter(sortColumn, sortType);
-    const dirList = rawData.filter(i => i.type === 'dir').sort(sortHandler);
-    const fileList = rawData.filter(i => i.type === 'file').sort(sortHandler);
+    const dirList = rawData.filter(i => i.isDirectory).sort(sortHandler);
+    const fileList = rawData.filter(i => i.isFile).sort(sortHandler);
     return dirList.concat(fileList);
   }, [data, fileterText, sortColumn, sortType]);
   const safePath = toSafeFilePath(pathname);
@@ -100,7 +100,7 @@ const FileTable = ({ data, loading, heightOffset }: FileTableProp) => {
           <HeaderCell>
             {safePath.length > 1 && <Icon className="upper-icon" icon="up" onClick={handleGoUpper} />}
           </HeaderCell>
-          <Cell>{(rowData: FileItem) => <Icon icon={rowData.type === 'dir' ? 'folder-open' : 'file'} />}</Cell>
+          <Cell>{(rowData: FileItem) => <Icon icon={rowData.isDirectory ? 'folder-open' : 'file'} />}</Cell>
         </Column>
         <Column flexGrow={1} sortable>
           <HeaderCell>Name</HeaderCell>

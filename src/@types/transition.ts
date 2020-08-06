@@ -1,5 +1,4 @@
 export type FileItem = {
-  type: 'file' | 'dir';
   name: string;
   isDirectory: boolean;
   isFile: boolean;

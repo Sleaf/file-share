@@ -1,8 +1,6 @@
 import fs from 'fs';
-
 import { Request, Response } from 'express-serve-static-core';
-import { getFileStat, isUnixHiddenFilename } from '@/server/utils/file';
-import { showAllFile } from '@/config';
+import { getFileStat } from '@/server/utils/file';
 import { getCommonLogString } from '@/server/utils/log';
 import { toAutoUnit } from '@/utils/number';
 
@@ -10,12 +8,6 @@ export default async (req: Request, res: Response) => {
   const targetFile = req.query.targetFile as string;
   const fileStat = await getFileStat(targetFile);
   switch (true) {
-    case fileStat == null:
-      console.log(getCommonLogString(req.ip), '请求下载的文件不存在:', targetFile);
-      break;
-    case !showAllFile && isUnixHiddenFilename(targetFile):
-      console.log(getCommonLogString(req.ip), '访问隐藏文件被禁止:', targetFile);
-      break;
     case fileStat?.isFile():
       res.set({
         'Content-Type': 'application/octet-stream',

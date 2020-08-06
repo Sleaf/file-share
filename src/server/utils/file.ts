@@ -1,6 +1,6 @@
 import path from 'path';
 import fs, { promises as fsPromise } from 'fs';
-import { showAllFile } from '@/config';
+import { shareDir, showAllFile } from '@/config';
 import { FileItem } from '@/@types/transition';
 import { errMsg } from '@/server/utils/log';
 
@@ -22,14 +22,14 @@ export const loadFiles = async (dirPath: string) => {
   } catch (e) {
     console.error(e);
   }
-  return fileStats.map<FileItem>(file => ({
-    type: file.stat.isDirectory() ? 'dir' : 'file',
+  const res = fileStats.map<FileItem>(file => ({
     name: file.fileInfo.name,
     isDirectory: file.stat.isDirectory(),
     isFile: file.stat.isFile(),
     size: file.stat.size,
     lastModify: file.stat.mtime.getTime(),
   }));
+  return shareDir ? res : res.filter(i => i.isFile);
 };
 
 /*

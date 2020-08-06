@@ -3,13 +3,13 @@ import { resolve } from 'path';
 // args
 export const args = require('minimist')(process.argv);
 
+export const filePath = args['_'][2] ? resolve(args['_'][2]) : resolve(process.execPath, '../');
 export const showAllFile = Boolean(args['a']);
 export const shareDir = Boolean(args['r']);
 export const writeMode = Boolean(args['w']);
 export const forceMode = Boolean(args['f']);
-export const pkgMode = Boolean((process as any).pkg?.entrypoint);
 export const exportPort = args['p'] || 8080;
-export const filePath = args['_'][2] ? resolve(args['_'][2]) : resolve(process.execPath, '../');
+export const pkgMode = Boolean((process as any).pkg?.entrypoint);
 
 // path
 export const ROOT_PATH = resolve(__dirname, '../');
