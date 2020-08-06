@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useBoolean } from 'react-hanger';
-import { Modal, Progress } from 'rsuite';
+import { Modal, Progress, Alert } from 'rsuite';
 import classnames from 'classnames';
 import UploadIcon from '@/client/assets/images/icon-upload.jpg';
 import useDirectState from '@/client/utils/hooks/useDirectState';
@@ -32,6 +32,7 @@ const UploadWidget = ({ onUploaded }: UploadWidgetProp) => {
           onUploaded?.();
         } else {
           setProgress(xhr.status);
+          Alert.error(`文件上传失败: ${xhr.status}`, 5000);
         }
       }
     };

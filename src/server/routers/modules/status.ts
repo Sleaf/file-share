@@ -1,15 +1,12 @@
-import { join } from 'path';
 import { Request, Response } from 'express-serve-static-core';
 import { ServerStatus } from '@/@types/transition';
-import { filePath, forceMode, shareDir, showAllFile, VERSION, writeMode } from '@/config';
-import { toSafeFilePath } from '@/utils/string';
-import { getDirUpdateTime } from '@/server/utils/file';
+import { forceMode, shareDir, showAllFile, VERSION, writeMode } from '@/config';
+import { getFileStat } from '@/server/utils/file';
 
 export default async (req: Request, res: Response) => {
-  const receivedPath = toSafeFilePath(decodeURI(req.query.path as string));
-  const targetFile = join(filePath, receivedPath);
+  const targetFile = req.query.targetFile as string;
   const returnPayload: ServerStatus = {
-    fileListUpdateTIme: (await getDirUpdateTime(targetFile))?.mtimeMs,
+    fileListUpdateTIme: (await getFileStat(targetFile))?.mtimeMs,
     version: VERSION,
     showAllFile,
     shareDir,

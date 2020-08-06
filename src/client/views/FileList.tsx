@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useFetchData from '@/client/utils/hooks/useFetchData';
 import { FETCH_FILE_LIST, GET_SERVER_STATUS } from '@/client/constants/APIs';
 import { safeGetArray } from '@/utils/array';
@@ -13,7 +13,6 @@ const fetchConfig = {
   cache: true,
 };
 const FileList = () => {
-  const history = useHistory();
   const { pathname } = useLocation();
   const { value: fileList, fetchData: fetchList, isFetching } = useFetchData(FETCH_FILE_LIST, EmptyObject, fetchConfig);
   const { value: serverStatus, fetchData: fetchServerStatus } = useFetchData(
@@ -33,23 +32,10 @@ const FileList = () => {
     const timer = setInterval(heartbeatHandler, SERVER_STATUS_REFRESH_INTERVAL);
     return () => clearInterval(timer);
   }, [fetchList, fetchServerStatus, fileList.lastUpdate, pathname]);
-  const handleClickRow = useCallback(
-    (rowData: FileItem) => {
-      if (rowData.isDirectory) {
-        history.push(rowData.name);
-      }
-    },
-    [history],
-  );
   const handleUploaded = useCallback(() => fetchList(pathname), [fetchList, pathname]);
   return (
     <div className="file-list-container">
-      <FileTable
-        heightOffset={110}
-        data={safeGetArray<FileItem>(fileList, 'fileList')}
-        loading={isFetching}
-        onRowClick={handleClickRow}
-      />
+      <FileTable heightOffset={110} data={safeGetArray<FileItem>(fileList, 'fileList')} loading={isFetching} />
       {serverStatus.writeMode && <UploadWidget onUploaded={handleUploaded} />}
     </div>
   );

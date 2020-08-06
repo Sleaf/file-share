@@ -49,8 +49,10 @@ app.use(
     {
       skip(req) {
         switch (true) {
+          case req.url?.startsWith('/favicon.ico'):
           case req.url?.startsWith('/resources'): // 静态资源
           case req.url?.startsWith('/status'):
+          case req.url?.startsWith('/list'):
           case req.res?.getHeader('Content-Type') === 'application/octet-stream': // 下载的文件
             return true;
           default:

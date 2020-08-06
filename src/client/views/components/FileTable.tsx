@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { Icon, Input, Table, InputGroup } from 'rsuite';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Breadcrumb, Icon, Input, InputGroup, Table } from 'rsuite';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import useSortControl from '@/client/utils/hooks/useSortControl';
 import { FileItem } from '@/@types/transition';
 import { toCompareSorter } from '@/utils/array';
@@ -18,10 +18,9 @@ type FileTableProp = {
   data: Array<FileItem>;
   heightOffset?: number;
   loading?: boolean;
-  onRowClick?: (rowData: FileItem) => void;
 };
 
-const FileTable = ({ data, loading, heightOffset, onRowClick }: FileTableProp) => {
+const FileTable = ({ data, loading, heightOffset }: FileTableProp) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const { value: tableHeight, onChange: setTableHeight } = useDirectState(getTableHeight(heightOffset));
@@ -42,10 +41,16 @@ const FileTable = ({ data, loading, heightOffset, onRowClick }: FileTableProp) =
     return dirList.concat(fileList);
   }, [data, fileterText, sortColumn, sortType]);
   const safePath = toSafeFilePath(pathname);
-  const handleGoUpper = useCallback(() => {
-    const pathSegment = safePath.split('/').filter(i => i);
-    pathSegment.length > 0 && history.push(`/${pathSegment.slice(0, -1).join('/')}`);
-  }, [history, safePath]);
+  const pathSegment = useMemo(() => safePath.split('/').filter(i => i), [safePath]);
+  const handleGoUpper = useCallback(
+    () => pathSegment.length > 0 && history.push(`/${pathSegment.slice(0, -1).join('/')}`),
+    [history, pathSegment],
+  );
+  const handleClickRow = useCallback(
+    rowData => rowData.isDirectory && history.push(`${pathname.replace(/\/$/, '')}/${rowData.name}`),
+    [history, pathname],
+  );
+  useEffect(() => setFileterText(''), [pathname]);
   useEffect(() => {
     const handler = () => setTableHeight(getTableHeight(heightOffset));
     window.addEventListener('resize', handler);
@@ -54,7 +59,19 @@ const FileTable = ({ data, loading, heightOffset, onRowClick }: FileTableProp) =
   return (
     <div className="file-table-container">
       <div className="table-toolbar">
-        <h3>Click file name to download</h3>
+        <Breadcrumb>
+          <Breadcrumb.Item componentClass={Link} to="/" active={pathname === '/'}>
+            根目录
+          </Breadcrumb.Item>
+          {pathSegment.map((path, index) => {
+            const toPath = `/${pathSegment.slice(0, index + 1).join('/')}`;
+            return (
+              <Breadcrumb.Item key={path} componentClass={Link} to={toPath} active={index === pathSegment.length - 1}>
+                {path}
+              </Breadcrumb.Item>
+            );
+          })}
+        </Breadcrumb>
         <InputGroup>
           <Input
             placeholder="请输入搜索内容（支持正则表达式 eg. /file/ ）"
@@ -74,7 +91,8 @@ const FileTable = ({ data, loading, heightOffset, onRowClick }: FileTableProp) =
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSort}
-        onRowClick={onRowClick}
+        onRowClick={handleClickRow}
+        virtualized
         bordered
         hover
       >

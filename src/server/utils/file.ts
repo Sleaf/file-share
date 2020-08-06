@@ -34,28 +34,35 @@ export const loadFiles = async (dirPath: string) => {
 
 /*
  * 获取文件夹更新时间
+ * undefined 说明暂无缓存
+ * null 说明该地址无效
+ * [value] 即为该地址的stat
  * */
-const dirUpdateCache: Record<string, Nullable<fs.Stats>> = {};
-export const getDirUpdateTime = async (filePath: string) => {
-  if (dirUpdateCache[filePath] !== undefined) {
-    return dirUpdateCache[filePath];
+const CACHE_EXPIRE = 2_000; // 最长缓存
+const fileStatCache: Record<string, Nullable<[Nullable<fs.Stats>, number]>> = {}; // [stat,time]
+export const getFileStat = async (filePath: string): Promise<Nullable<fs.Stats>> => {
+  const cachedStat = fileStatCache[filePath];
+  if (cachedStat != null) {
+    if (cachedStat[1] + CACHE_EXPIRE < Date.now()) {
+      // 缓存已过期
+      fileStatCache[filePath] = [undefined, cachedStat[1]];
+    } else {
+      // 含有有效缓存
+      return cachedStat?.[0];
+    }
   }
-  if (dirUpdateCache[filePath] !== null) {
-    // null 说明有程序在进行
+  if (cachedStat?.[0] === undefined) {
     try {
-      dirUpdateCache[filePath] = null; // 占位防止多次触发
-      dirUpdateCache[filePath] = await fsPromise.stat(filePath);
-      console.debug('开始监控目录变化：', filePath);
-      fs.watchFile(filePath, stat => {
-        dirUpdateCache[filePath] = stat;
-        console.debug('目录已更新：', filePath);
-      });
-      return dirUpdateCache[filePath];
+      fileStatCache[filePath] = null; // 占位防止多次触发
+      const curFileStat = await fsPromise.stat(filePath);
+      fileStatCache[filePath] = [curFileStat, Date.now()];
+      return curFileStat;
     } catch (e) {
-      dirUpdateCache[filePath] = undefined;
-      errMsg('获取文件夹更新时间失败：', filePath);
+      fileStatCache[filePath] = undefined;
+      errMsg('获取文件状态失败：', filePath);
       return null;
     }
   }
+  // is null
   return null;
 };

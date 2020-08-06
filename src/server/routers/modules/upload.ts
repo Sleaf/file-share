@@ -1,14 +1,12 @@
 import Express from 'express';
-import path, { join } from 'path';
+import path from 'path';
 import fs, { promises as fsPromise } from 'fs';
 import { getCommonLogString } from '@/server/utils/log';
-import { filePath, forceMode, writeMode } from '@/config';
+import { forceMode, writeMode } from '@/config';
 import { toAutoUnit, toSignificantDigits } from '@/utils/number';
-import { toSafeFilePath } from '@/utils/string';
 
 export default async (req: Express.Request, res: Express.Response) => {
-  const receivedPath = toSafeFilePath(decodeURI(req.query.path as string));
-  const targetFile = join(filePath, receivedPath);
+  const targetFile = req.query.targetFile as string;
   if (!req.files) {
     res.statusCode = 400;
     return res.end();
@@ -43,10 +41,7 @@ export default async (req: Express.Request, res: Express.Response) => {
       }
     } catch (e) {
       file.mv(fileDist);
-      console.log(
-        getCommonLogString(req.ip),
-        `上传文件:【${fileDist}】(${toAutoUnit(file.size, toSignificantDigits)}B)`,
-      );
+      console.log(getCommonLogString(req.ip), `上传文件: ${fileDist} (${toAutoUnit(file.size, toSignificantDigits)}B)`);
     }
   }
 
