@@ -9,9 +9,13 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "jsx": "react",
-    "module": "commonjs",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
     "noImplicitAny": false,
     "outDir": "./build-src",
+    "removeComments": true,
     "paths": {
       "@/*": [
         "src/*"
@@ -20,9 +24,7 @@
     "pretty": false,
     "resolveJsonModule": true,
     "strict": true,
-    "target": "es6",
-    /* Experimental Options */
-    "experimentalDecorators": true
+    "target": "es5"
   },
   "exclude": [
     "node_modules"

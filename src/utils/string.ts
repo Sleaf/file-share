@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { doNothing } from '@/utils/func';
+import { doNothing } from './func';
 
 export enum Splitter {
   PATH_COLON = ':',

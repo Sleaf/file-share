@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '@/client/App';
 import { removeClass, removeElement, setTagTitle } from '@/client/utils/domLib';
-import './styles/index.less';
 
 (module as any).hot?.accept();
 

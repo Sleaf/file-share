@@ -60,6 +60,7 @@ const styleSupportList = [
 export default {
   entry: {
     app: './src/client/index.tsx',
+    style: './src/client/styles/index.less',
   },
   output: {
     path: resolve(__dirname, 'build', 'client'),
@@ -109,7 +110,7 @@ export default {
     }),
     // 提取css
     new MiniCssExtractPlugin({
-      filename: `${BUILD_RESOURCE_NAME}/css/style.${additionHash}.css`,
+      filename: `${BUILD_RESOURCE_NAME}/css/style.[id]${additionHash}.css`,
       chunkFilename: `${BUILD_RESOURCE_NAME}/css/[id]${additionHash}.css`,
     }),
     // 确保 vendors 的 chunkhash 只随内容变化

@@ -4,15 +4,15 @@
   "private": true,
   "author": "Sleaf",
   "main": "src/server/index.ts",
-  "bin": "./build/server/index.js",
+  "bin": "build-src/server/index.js",
   "scripts": {
     "cz": "git add -A && git-cz --disable-emoji",
     "dev-fe": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.ts --colors --hot",
     "dev-server": "nodemon --config ./nodemon-server.json ~/Public",
     "start-server": "ts-node -r tsconfig-paths/register src/server/index.ts",
     "build-fe": "cross-env NODE_ENV=production webpack --progress --colors",
-    "build-pkg": "run-s tsc-tspm pkg",
-    "tsc-tspm": "tsc && ef-tspm",
+    "build-pkg": "run-s build-fe tsc-tspm pkg",
+    "tsc-tspm": "rm -rf ./build-src && tsc -p ./tsconfig-server.json && ef-tspm -c ./tsconfig-server.json",
     "pkg": "pkg ./package.json --out-path=dist-pkg/"
   },
   "resolutions": {
@@ -154,8 +154,7 @@
   },
   "pkg": {
     "assets": [
-      "src/client/views/**/*",
-      "src/client/style/**/*",
+      "build/client/**/*",
       "package.json"
     ]
   },

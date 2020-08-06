@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import axiosFactory, { AxiosInstance, CancelTokenSource } from 'axios';
-import { pourIntoURL } from '@/utils/string';
 import { HttpStatus } from '@/constants/enums';
+import { pourIntoURL } from './string';
 
 const requestPool: Record<string, CancelTokenSource> = {};
 
