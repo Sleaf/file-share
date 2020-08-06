@@ -19,9 +19,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
 
     - name: Install dependencies
-      uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: install
+      run: yarn install
 
     - name: Create Release
       id: create_release
@@ -35,9 +33,7 @@ jobs:
         prerelease: false
 
     - name: Packaged releases assets
-      uses: borales/actions-yarn@v2.0.0
-      with:
-        cmd: build-pkg
+      run: yarn build-pkg
 
     - name: Upload Release Assets
       id: upload-release-assets 
