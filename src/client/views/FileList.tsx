@@ -6,7 +6,7 @@ import { safeGetArray } from '@/utils/array';
 import { EmptyObject } from '@/constants/literal';
 import { FileItem } from '@/@types/transition';
 import FileTable from './components/FileTable';
-import UploadWidget from './components/uploadWidget';
+import UploadWidget from './components/UploadWidget';
 
 const SERVER_STATUS_REFRESH_INTERVAL = 5000;
 const fetchConfig = {

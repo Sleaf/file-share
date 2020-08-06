@@ -5,7 +5,7 @@ import pkg from './package.json';
 
 // Plugins
 const HtmlwebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // env
@@ -131,6 +131,7 @@ export default {
         minifyJS: true,
       },
     }),
+    new CaseSensitivePathsPlugin(),
     // typescript type check
     new ForkTsCheckerWebpackPlugin(),
   ],
