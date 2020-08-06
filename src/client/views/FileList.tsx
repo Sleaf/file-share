@@ -44,7 +44,12 @@ const FileList = () => {
   const handleUploaded = useCallback(() => fetchList(pathname), [fetchList, pathname]);
   return (
     <div className="file-list-container">
-      <FileTable data={safeGetArray<FileItem>(fileList, 'fileList')} loading={isFetching} onRowClick={handleClickRow} />
+      <FileTable
+        heightOffset={110}
+        data={safeGetArray<FileItem>(fileList, 'fileList')}
+        loading={isFetching}
+        onRowClick={handleClickRow}
+      />
       {serverStatus.writeMode && <UploadWidget onUploaded={handleUploaded} />}
     </div>
   );

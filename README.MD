@@ -37,4 +37,5 @@ yarn build-pkg
 - [x] 优化io流程
 - [ ] Electron支持
 - [x] 前端重构为SPA，与后端走RESTful API
+- [ ] 优化上传样式（改为多次并行传输，并表现为table中置灰进度）
 - [ ] 使用ws代替状态轮询

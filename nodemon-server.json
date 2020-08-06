@@ -1,12 +1,13 @@
 {
   "ignore": [
     ".git",
-    "node_modules/**",
-    "src/views/**/*",
-    "src/style/**/*"
+    "node_modules/**"
   ],
   "watch": [
-    "src/**/*",
+    "src/constants/**/*",
+    "src/server/**/*",
+    "src/utils/**/*",
+    "src/config.ts",
     "package.json"
   ],
   "exec": "yarn start-server",

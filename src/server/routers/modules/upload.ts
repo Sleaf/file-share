@@ -3,7 +3,7 @@ import path, { join } from 'path';
 import fs, { promises as fsPromise } from 'fs';
 import { getCommonLogString } from '@/server/utils/log';
 import { filePath, forceMode, writeMode } from '@/config';
-import { toAutoUnit } from '@/utils/number';
+import { toAutoUnit, toSignificantDigits } from '@/utils/number';
 import { toSafeFilePath } from '@/utils/string';
 
 export default async (req: Express.Request, res: Express.Response) => {
@@ -43,7 +43,10 @@ export default async (req: Express.Request, res: Express.Response) => {
       }
     } catch (e) {
       file.mv(fileDist);
-      console.log(getCommonLogString(req.ip), `上传文件:【${fileDist}】(${toAutoUnit(file.size)}B)`);
+      console.log(
+        getCommonLogString(req.ip),
+        `上传文件:【${fileDist}】(${toAutoUnit(file.size, toSignificantDigits)}B)`,
+      );
     }
   }
 

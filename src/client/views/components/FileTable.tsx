@@ -1,25 +1,30 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Icon, Input, Table, InputGroup } from 'rsuite';
 import { useHistory, useLocation } from 'react-router-dom';
 import useSortControl from '@/client/utils/hooks/useSortControl';
 import { FileItem } from '@/@types/transition';
 import { toCompareSorter } from '@/utils/array';
 import { toDateString } from '@/utils/date';
-import { toAutoUnit } from '@/utils/number';
+import { toAutoUnit, toRound, toSignificantDigits } from '@/utils/number';
 import { appendParams, toSafeFilePath } from '@/utils/string';
 import { SortOrder } from '@/constants/enums';
 import useDirectState from '@/client/utils/hooks/useDirectState';
 
 const { Cell, Column, HeaderCell } = Table;
+
+const getTableHeight = (offset = 0) => window.innerHeight - offset;
+
 type FileTableProp = {
   data: Array<FileItem>;
+  heightOffset?: number;
   loading?: boolean;
   onRowClick?: (rowData: FileItem) => void;
 };
 
-const FileTable = ({ data, loading, onRowClick }: FileTableProp) => {
+const FileTable = ({ data, loading, heightOffset, onRowClick }: FileTableProp) => {
   const history = useHistory();
   const { pathname } = useLocation();
+  const { value: tableHeight, onChange: setTableHeight } = useDirectState(getTableHeight(heightOffset));
   const { value: fileterText, onChange: setFileterText } = useDirectState('');
   const { sortColumn, sortType, handleSort } = useSortControl('name', SortOrder.ASC);
   const renderFileList = useMemo(() => {
@@ -41,6 +46,11 @@ const FileTable = ({ data, loading, onRowClick }: FileTableProp) => {
     const pathSegment = safePath.split('/').filter(i => i);
     pathSegment.length > 0 && history.push(`/${pathSegment.slice(0, -1).join('/')}`);
   }, [history, safePath]);
+  useEffect(() => {
+    const handler = () => setTableHeight(getTableHeight(heightOffset));
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, [heightOffset, setTableHeight]);
   return (
     <div className="file-table-container">
       <div className="table-toolbar">
@@ -58,7 +68,7 @@ const FileTable = ({ data, loading, onRowClick }: FileTableProp) => {
       </div>
       <Table
         className="file-table"
-        height={800}
+        height={tableHeight}
         data={renderFileList}
         loading={loading}
         sortColumn={sortColumn}
@@ -94,7 +104,11 @@ const FileTable = ({ data, loading, onRowClick }: FileTableProp) => {
         </Column>
         <Column width={120} sortable>
           <HeaderCell>Size</HeaderCell>
-          <Cell dataKey="size">{(rowData: FileItem) => `${toAutoUnit(rowData.size)}B`}</Cell>
+          <Cell dataKey="size">
+            {(rowData: FileItem) => (
+              <span title={`${toRound(rowData.size)} Byte`}>{toAutoUnit(rowData.size, toSignificantDigits)}B</span>
+            )}
+          </Cell>
         </Column>
         <Column width={180} sortable>
           <HeaderCell>Date Modified</HeaderCell>

@@ -1,4 +1,5 @@
-declare type Nullable<T> = T | null | undefined;
+export type DataFormatter = (num?: Nullable<number>, ...args: Array<any>) => string;
+
 export const NAN_PLACEHOLDER = '--';
 /*
  * 测试数字是否为null或不合法
@@ -68,7 +69,7 @@ export const toMillion = (number?: Nullable<number>, formatter = toRound) =>
   holderFilter(number) || `${formatter(Number(number) / 1_000_000)}M`;
 export const toGiga = (number?: Nullable<number>, formatter = toRound) =>
   holderFilter(number) || `${formatter(Number(number) / 1_000_000_000)}G`;
-export const toAutoUnit = (number?: Nullable<number>, formatter = toRound) => {
+export const toAutoUnit = (number?: Nullable<number>, formatter: DataFormatter = toRound) => {
   const holder = holderFilter(number);
   if (holder) {
     return holder;
