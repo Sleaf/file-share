@@ -50,7 +50,7 @@ const FileTable = ({ data, loading, heightOffset }: FileTableProp) => {
     rowData => rowData.isDirectory && history.push(`${pathname.replace(/\/$/, '')}/${rowData.name}`),
     [history, pathname],
   );
-  useEffect(() => setFileterText(''), [pathname]);
+  useEffect(() => setFileterText(''), [data, setFileterText]);
   useEffect(() => {
     const handler = () => setTableHeight(getTableHeight(heightOffset));
     window.addEventListener('resize', handler);
