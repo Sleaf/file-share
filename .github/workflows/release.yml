@@ -33,7 +33,7 @@ jobs:
         prerelease: false
 
     - name: Packaged releases assets
-      run: yarn build-pkg
+      run: yarn build-pkg && yarn xz
 
     - name: Upload Release Assets
       id: upload-release-assets 

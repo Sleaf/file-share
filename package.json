@@ -12,7 +12,8 @@
     "build-fe": "cross-env NODE_ENV=production webpack --progress --colors",
     "build-pkg": "run-s build-fe tsc-tspm pkg",
     "tsc-tspm": "rm -rf ./build-src && tsc -p ./tsconfig-server.json && ef-tspm -c ./tsconfig-server.json",
-    "pkg": "pkg ./package.json --out-path=dist-pkg/"
+    "pkg": "pkg ./package.json --out-path=dist-pkg/",
+    "xz": "xz ./dist-pkg/* -k -T 0"
   },
   "resolutions": {
     "@types/react": "^16.9.11"
