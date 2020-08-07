@@ -82,7 +82,7 @@ app.use('*', (req, res) =>
 
 // running
 app.listen(exportPort, () => {
-  console.clear();
+  // console.clear();
   const shareAddress = availableIpv4.reduce(
     (acc, addr, index) => ({
       ...acc,
