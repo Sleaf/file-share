@@ -27,6 +27,7 @@ export default async (req: Express.Request, res: Express.Response) => {
   // 处理所有文件
   for (const file of uploadList) {
     const fileDist = path.join(targetFile, file.name);
+    const fileInfoSte = `${fileDist} (${toAutoUnit(file.size, toSignificantDigits)}B)`;
     // 检查文件状态
     try {
       const fileState = await fsPromise.stat(fileDist);
@@ -39,9 +40,12 @@ export default async (req: Express.Request, res: Express.Response) => {
         res.statusCode = 403;
         return res.end();
       }
-    } catch (e) {
       file.mv(fileDist);
-      console.log(getCommonLogString(req.ip), `上传文件: ${fileDist} (${toAutoUnit(file.size, toSignificantDigits)}B)`);
+      console.log(getCommonLogString(req.ip), `上传成功(覆盖原文件): ${fileInfoSte}`);
+    } catch (e) {
+      // 文件不存在
+      file.mv(fileDist);
+      console.log(getCommonLogString(req.ip), `上传成功: ${fileInfoSte}`);
     }
   }
 

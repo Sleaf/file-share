@@ -1,20 +1,20 @@
-# 内网文件共享服务器
-> 一个简单的http本地文件共享服务
+# 局域网文件共享服务器
+>⚠️ 此程序仅作为**局域网内**共享访问使用，请多关注运行日志以免有异常操作。
+
+一个简单的http本地文件共享服务
 
 ## 使用说明
->⚠️ 此程序仅作为局域网内轻量共享访问使用，多关注运行日志，请勿长期运行。
-
 ### 使用[release版本](https://github.com/Sleaf/file-share/releases)（推荐）
-> 目前使用pkg打包运行，之后可能新增带gui的electron程序。
-> 提供了`xz`压缩文件方便下载，MacOS与Linux用户下载后可使用`xz`指令解压使用，Windows用户可使用 [7zip](https://www.7-zip.org/) 等解压软件解压使用。
+> - 目前使用pkg打包运行，之后可能新增带gui的electron程序。
+> - 提供了`xz`压缩文件方便下载，MacOS与Linux用户下载后可使用`xz`指令解压使用，Windows用户可使用 [7zip](https://www.7-zip.org/) 等解压软件解压使用。
 
 默认分享运行程序的文件夹，如果需要输入参数，可将程序拖入控制台取得路径，在后面添加运行参数，参数同[直接使用代码](#直接使用项目代码)。
 Linux和MacOS环境可能需要执行`chmod +x file-share-xxx`添加运行权限
 
 ### 直接使用项目代码
 ```shell script
-#分享文件（默认为运行目录）
-yarn start-server [path_you_want_to_share] [options] 
+# 分享文件（默认共享运行目录）
+yarn start-server [path_you_want_to_share?] [options?] 
    # -r 显示子文件夹  
    # -a 显示隐藏文件  
    # -w 允许上传文件
