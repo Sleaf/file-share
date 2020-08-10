@@ -16,7 +16,7 @@ router.use(async (req, res, next) => {
   const receivedPath = toSafeFilePath(decodeURI(req.query.path as string));
   const targetFile = path.join(filePath, receivedPath); // 目标地址
   switch (true) {
-    case !shareDir && receivedPath.split('/').filter(i => i).length > 0: // 检查文件夹权限
+    case !shareDir && receivedPath.split('/').filter(i => i).length > 1: // 检查文件夹权限(仅过滤一级)
     case !showAllFile && isUnixHiddenFilename(targetFile): // 检查隐藏文件权限
       res.status(404);
       return res.end();

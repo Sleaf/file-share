@@ -1,6 +1,6 @@
 {
   "name": "file-share",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "author": "Sleaf",
   "main": "src/server/index.ts",
   "bin": "build-src/server/index.js",

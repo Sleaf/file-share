@@ -55,6 +55,9 @@ export const getFileStat = async (filePath: string): Promise<Nullable<fs.Stats>>
     try {
       fileStatCache[filePath] = null; // 占位防止多次触发
       const curFileStat = await fsPromise.stat(filePath);
+      if (!shareDir && curFileStat.isDirectory()) {
+        return null;
+      }
       fileStatCache[filePath] = [curFileStat, Date.now()];
       return curFileStat;
     } catch (e) {
