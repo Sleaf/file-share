@@ -42,10 +42,12 @@ const FileTable = ({ data, loading, heightOffset }: FileTableProp) => {
   }, [data, fileterText, sortColumn, sortType]);
   const safePath = toSafeFilePath(pathname);
   const pathSegment = useMemo(() => safePath.split('/').filter(i => i), [safePath]);
-  const handleGoUpper = useCallback(
-    () => pathSegment.length > 0 && history.push(`/${pathSegment.slice(0, -1).join('/')}`),
-    [history, pathSegment],
-  );
+  const pathPrefix = `/${pathSegment.slice(0, -1).join('/')}`;
+  const handleGoUpper = useCallback(() => pathSegment.length > 0 && history.push(pathPrefix), [
+    history,
+    pathPrefix,
+    pathSegment.length,
+  ]);
   const handleClickRow = useCallback(
     rowData => rowData.isDirectory && history.push(`${pathname.replace(/\/$/, '')}/${rowData.name}`),
     [history, pathname],
@@ -111,7 +113,7 @@ const FileTable = ({ data, loading, heightOffset }: FileTableProp) => {
               ) : (
                 <a
                   className="download-cell"
-                  href={appendParams('/api/download', { path: `${pathname}/${rowData.name}` })}
+                  href={appendParams('/api/download', { path: `${pathPrefix}${rowData.name}` })}
                   download={rowData.name}
                 >
                   {rowData.name}
