@@ -52,6 +52,7 @@ const useFetchData = <F extends PromiseFunc>(
         if (componentAlive.current && !e.__CANCEL__) {
           setFetching(false);
         }
+        throw e;
       }
       return null;
     },
