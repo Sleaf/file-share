@@ -32,7 +32,7 @@
     "morgan": "^1.10.0",
     "nib": "^1.1.2",
     "nodemon": "^2.0.4",
-    "pug": "^3.0.0",
+    "pug": "^3.0.1",
     "react": "^16.13.1",
     "react-dom": "npm:@hot-loader/react-dom",
     "react-hanger": "^2.2.1",
